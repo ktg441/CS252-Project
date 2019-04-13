@@ -52,10 +52,9 @@ class LoginBase extends React.Component {
     }
 
     this.state = {
-      email: '',
+      username: '',
       password: '',
       error: '',
-      resetEmail: '',
       open: false,
     }
 
@@ -167,12 +166,12 @@ class LoginBase extends React.Component {
           <Typography>DodgeEm</Typography>
           <form id="loginForm">
             <TextField
-              id="email"
-              type="email"
+              id="username"
+              type="username"
               required
-              value={this.state.email}
+              value={this.state.username}
               onChange={this.handleChange}
-              label="Email"
+              label="Username"
               fullWidth
               className={this.props.classes.field}
               variant="outlined"
