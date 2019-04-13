@@ -1,7 +1,8 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+//import logo from '../imgs/DodgeLogo.PNG';
 import {
-  Hero, CallToAction, ScrollDownIndicator, Section
+  Hero, CallToAction, ScrollDownIndicator, Section, Heading
 } from 'react-landing-page'
 import { withStyles } from '@material-ui/core/styles';
 
@@ -13,7 +14,15 @@ class LandingPage extends React.Component {
   render() {
     return (
         <div>
-            <Typography>Landing Page</Typography>
+            <Hero
+            color="white"
+            bgOpacity={.5}
+            backgroundImage="https://images.pond5.com/films-shine-footage-024728478_prevstill.jpeg"
+            >
+            <Heading><h1>Dodge 'Em</h1></Heading>
+            <h2>Be safe while watching movies, tv shows, or reading, etc</h2>
+            <ScrollDownIndicator/>
+            </Hero>
             <Section
                heading="DESCRIPTION HERE"
             />

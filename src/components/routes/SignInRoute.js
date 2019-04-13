@@ -13,11 +13,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 const styles = theme => ({
     link: {
       margin: theme.spacing.unit,
-      color: 'white',
+      color: 'black',
     },
     list: {
       width: 250,
     },
+
 });
 
 class SignedInLinks extends React.Component {

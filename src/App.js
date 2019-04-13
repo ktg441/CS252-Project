@@ -9,7 +9,7 @@ import SignUp from './components/Signup';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-//import logo from './img/white_logo.png';
+import logo from './imgs/transLogo.png';
 //import firebase from 'firebase/app';
 //import 'firebase/auth';
 import PrivRoute from './components/routes/PrivRoute';
@@ -24,7 +24,7 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   logo: {
-    color: 'white',
+    color: 'black',
     'max-width': '100px',
     'max-height': '100px',
     margin: theme.spacing.unit,
@@ -42,12 +42,22 @@ class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      color: 'white',
+    }
+  }
+
+  listenScrollEvent = e => {
+    if (window.scrollY > 20) {
+      this.setState({color: '#fca258'})
+    } else {
+      this.setState({color: 'white'})
     }
   }
 
   componentWillMount(){
     var that = this;
+    window.addEventListener('scroll', this.listenScrollEvent);
     that.setState({
       loading: false,
     });
@@ -76,10 +86,10 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <div className="App">
-          <AppBar color="primary">
+        <AppBar position="sticky" style={{backgroundColor: this.state.color }}>
             <Toolbar>
               <Link component={RouterLink} to='/'>
-                <Typography>DodgeEm</Typography>
+              <img className={this.props.classes.logo} src={logo} alt="DodgeEm" />
               </Link>
               <div className={this.props.classes.links}>
                 {this.state.authenticated ? <SignInRoute/> : <SignOutRoute/>}

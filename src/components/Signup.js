@@ -7,7 +7,8 @@ import TextField from '@material-ui/core/TextField/';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import ReactPasswordStrength from 'react-password-strength';
-import Typography from '@material-ui/core/Typography'
+import Typography from '@material-ui/core/Typography';
+import logo from '../imgs/transLogo.png';
 
 const styles = theme => ({
   container: {
@@ -40,6 +41,14 @@ const styles = theme => ({
     color: "red",
     marginTop: 10
   },
+  logo: {
+    color: 'black',
+    'max-width': '100px',
+    'max-height': '100px',
+    margin: 'auto',
+    display: 'block',
+    position: 'center',
+  },
 });
 
 class SignupBase extends React.Component {
@@ -49,7 +58,7 @@ class SignupBase extends React.Component {
       this.props.history.push('/home');
     }
     this.state = {
-      name: '',
+      username: '',
       password: '',
       password2: '',
       email: '',
@@ -67,8 +76,8 @@ class SignupBase extends React.Component {
 
 
   signUp = event => {
-    if (this.state.name === "") {
-      this.setState({missingText: "Name field cannot be empty"});
+    if (this.state.username === "") {
+      this.setState({missingText: "Username field cannot be empty"});
       return;
     }
     if (this.state.email === "") {
@@ -96,15 +105,15 @@ class SignupBase extends React.Component {
     return (
       <div className={this.props.classes.container}>
         <Paper className={this.props.classes.paper}>
-          <Typography>DodgeEm</Typography>
+        <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
           <form id="loginForm" style={{paddingTop:'2%'}} onSubmit={this.handleLogin}>
             <TextField
-              id="name"
-              type="name"
+              id="username"
+              type="username"
               required
-              value={this.state.name}
+              value={this.state.username}
               onChange={this.handleChange}
-              label="Name"
+              label="Username"
               fullWidth
               className={this.props.classes.field}
               variant="outlined"

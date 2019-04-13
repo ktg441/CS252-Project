@@ -3,12 +3,12 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField/';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-//import logo from '../img/large_logo.png';
 import { compose } from 'recompose';
 //import { withFirebase } from './Firebase';
 import { withRouter } from 'react-router-dom';
 //import 'firebase/auth';
-import Typography from '@material-ui/core/Typography'
+import Typography from '@material-ui/core/Typography';
+import logo from '../imgs/transLogo.png';
 
 const styles = theme => ({
   container: {
@@ -40,6 +40,14 @@ const styles = theme => ({
     margin: 'auto',
     'max-width': '800px',
     'max-height': '800px',
+  },
+  logo: {
+    color: 'black',
+    'max-width': '100px',
+    'max-height': '100px',
+    margin: 'auto',
+    display: 'block',
+    position: 'center',
   },
 });
 
@@ -163,7 +171,7 @@ class LoginBase extends React.Component {
     return (
       <div className={this.props.classes.container}>
         <Paper className={this.props.classes.paper}>
-          <Typography>DodgeEm</Typography>
+          <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
           <form id="loginForm">
             <TextField
               id="username"
