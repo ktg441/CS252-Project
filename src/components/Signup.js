@@ -80,10 +80,6 @@ class SignupBase extends React.Component {
       this.setState({missingText: "Username field cannot be empty"});
       return;
     }
-    if (this.state.email === "") {
-      this.setState({missingText: "Email field cannot be empty"});
-      return;
-    }
     if (this.state.password === "") {
       this.setState({missingText: "Password field cannot be empty"});
       return;
@@ -122,6 +118,7 @@ class SignupBase extends React.Component {
             <ReactPasswordStrength
               id="password"
               ref={ref => this.ReactPasswordStrength = ref}
+              label="Password"
               minLength={6}
               minScore={3}
               scoreWords={['weak', 'weak', 'okay', 'good', 'strong']}

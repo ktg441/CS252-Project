@@ -49,6 +49,12 @@ const styles = theme => ({
     display: 'block',
     position: 'center',
   },
+  field: {
+    textAlign: 'left',
+    margin: 'auto',
+    paddingBottom: 10,
+    width: '75%',
+  },
 });
 
 class LoginBase extends React.Component {
