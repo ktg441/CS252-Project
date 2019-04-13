@@ -24,8 +24,22 @@ class LandingPage extends React.Component {
             <ScrollDownIndicator/>
             </Hero>
             <Section
-               heading="DESCRIPTION HERE"
-            />
+               heading="What We Do"
+            >
+            <hr color="black" width="20%"/>
+            <div>
+              
+            </div>
+            </Section>
+
+            <Section
+               heading="Who We Are"
+            >
+            <hr color="black" width="20%"/>
+            <div>
+              
+            </div>
+            </Section>
         </div>
     )
   }
