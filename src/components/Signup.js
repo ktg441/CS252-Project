@@ -61,7 +61,6 @@ class SignupBase extends React.Component {
       username: '',
       password: '',
       password2: '',
-      email: '',
       missingText: '',
     }
   }
