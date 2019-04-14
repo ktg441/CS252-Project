@@ -10,7 +10,13 @@ import ReactPasswordStrength from 'react-password-strength';
 import Typography from '@material-ui/core/Typography';
 import logo from '../imgs/transLogo.png';
 import { auth } from './FirebaseConfig/Fire'
-import h from './Home'
+import app from 'firebase/app';
+import firebase from 'firebase/app'
+import home from './Home'
+import 'firebase/functions';
+require('firebase/firestore');
+
+
 const styles = theme => ({
   container: {
     marginTop: 80,
@@ -63,6 +69,7 @@ class SignupBase extends React.Component {
       password: '',
       password2: '',
       missingText: '',
+      errorMessage: '',
     }
   }
 
@@ -83,9 +90,10 @@ class SignupBase extends React.Component {
   }
 
   handleSubmit = (ev) => {
-    console.log("hello")
+    //console.log("hello")
+    var that = this;
     if (this.state.username === "") {
-      console.log("tst")
+      //console.log("tst")
       this.setState({missingText: "Username field cannot be empty"});
       return;
     }
@@ -105,17 +113,21 @@ class SignupBase extends React.Component {
     if (this.passwordsMatch()) {
       auth
         .createUserWithEmailAndPassword(this.state.username, this.state.password)
-        .then(() => {
-          console.log("hello1")
+        .then(function () {
+          app.auth().onAuthStateChanged(function (user){
+            if(user){
+              firebase.firestore().collection('users').doc(user.uid).set({
+                Username: that.state.username,
+              }).then(function (){
+                console.log("WE DID IT");
+              }).catch(function(error){
+                console.log("Error: "+error);
+              });
+            }
+          })
+        }).then(() => {
           this.props.history.push('/home');
-          if (this.state.username) {
-            this.props.updateUser({
-              username: this.state.username,
-            })
-          }
-          //this.addUser()
-        })
-        .catch(error => this.setState({ errorMessage: error.message }))
+        }).catch(error => this.setState({ errorMessage: error.message }))
     }
   }
 

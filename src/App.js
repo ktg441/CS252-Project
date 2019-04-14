@@ -10,8 +10,8 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import logo from './imgs/transLogo.png';
-//import firebase from 'firebase/app';
-//import 'firebase/auth';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import PrivRoute from './components/routes/PrivRoute';
 import LoginRoute from './components/routes/LoginRoute';
 import Home from './components/Home';
@@ -58,10 +58,10 @@ class App extends React.Component {
   componentWillMount(){
     var that = this;
     window.addEventListener('scroll', this.listenScrollEvent);
-    that.setState({
+    /*that.setState({
       loading: false,
-    });
-    /*firebase.auth().onAuthStateChanged(function(user) {
+    });*/
+    firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
           that.setState({
             authenticated: true,
@@ -76,7 +76,7 @@ class App extends React.Component {
             loading: false
           });
         }
-    });*/
+    });
   }
   render() {
 
@@ -108,7 +108,7 @@ class App extends React.Component {
             authenticated={this.state.authenticated}
           />
 
-          <LandingPage Route exact
+          <LoginRoute Route exact
             path={"/"}
             component={LandingPage}
             authenticated={this.state.authenticated}

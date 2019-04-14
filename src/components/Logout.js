@@ -1,5 +1,5 @@
 import React from 'react';
-//import firebase from 'firebase/app';
+import firebase from 'firebase/app';
 
 class Logout extends React.Component {
 
@@ -12,7 +12,7 @@ class Logout extends React.Component {
 
   componentDidMount(){
     var that = this;
-    /*firebase.auth().signOut()
+    firebase.auth().signOut()
       .then(function() {
           this.reDirect();
       })
@@ -20,7 +20,7 @@ class Logout extends React.Component {
         that.setState({
           loading: false
         });
-      });*/
+      });
   }
 
   reDirect = () => {
