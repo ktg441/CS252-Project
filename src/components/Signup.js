@@ -9,7 +9,8 @@ import Paper from '@material-ui/core/Paper';
 import ReactPasswordStrength from 'react-password-strength';
 import Typography from '@material-ui/core/Typography';
 import logo from '../imgs/transLogo.png';
-
+import { auth } from './FirebaseConfig/Fire'
+import h from './Home'
 const styles = theme => ({
   container: {
     marginTop: 80,
@@ -73,9 +74,18 @@ class SignupBase extends React.Component {
     this.setState({ password: info.password })
   }
 
+  passwordsMatch = () => {
+    if (this.state.password !== this.state.password2) {
+      this.setState({ errorMessage: 'The passwords you entered do not match.' })
+      return false
+    }
+    return true
+  }
 
-  signUp = event => {
+  handleSubmit = (ev) => {
+    console.log("hello")
     if (this.state.username === "") {
+      console.log("tst")
       this.setState({missingText: "Username field cannot be empty"});
       return;
     }
@@ -91,7 +101,26 @@ class SignupBase extends React.Component {
       this.setState({missingText: "Passwords do not match"});
       return;
     }
-}
+    ev.preventDefault()
+    if (this.passwordsMatch()) {
+      auth
+        .createUserWithEmailAndPassword(this.state.username, this.state.password)
+        .then(() => {
+          console.log("hello1")
+          this.props.history.push('/home');
+          if (this.state.username) {
+            this.props.updateUser({
+              username: this.state.username,
+            })
+          }
+          //this.addUser()
+        })
+        .catch(error => this.setState({ errorMessage: error.message }))
+    }
+  }
+
+ 
+
 
   render() {
 
@@ -101,14 +130,14 @@ class SignupBase extends React.Component {
       <div className={this.props.classes.container}>
         <Paper className={this.props.classes.paper}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
-          <form id="loginForm" style={{paddingTop:'2%'}} onSubmit={this.handleLogin}>
+          <form id="loginForm" style={{paddingTop:'2%'}} onSubmit={this.handleSubmit}>
             <TextField
               id="username"
               type="username"
               required
               value={this.state.username}
               onChange={this.handleChange}
-              label="Username"
+              label="Email"
               fullWidth
               className={this.props.classes.field}
               variant="outlined"
@@ -140,7 +169,7 @@ class SignupBase extends React.Component {
             />
           </form>
           {<Typography className={this.props.classes.error}>{this.state.missingText}</Typography>}
-          <Button id="signup" onClick={this.signUp} variant="contained" color="primary" className={this.props.classes.button}>SIGN UP</Button>
+          <Button id="signup" onClick={this.handleSubmit} variant="contained" color="primary" className={this.props.classes.button}>SIGN UP</Button>
         </Paper>
       </div>
     );
