@@ -20,6 +20,8 @@ class HomeBase extends React.Component {
     super(props);
     
     this.state = {
+      movie: '',
+      trigger: '',
       movies: [],
       query: ''
     };
@@ -63,6 +65,15 @@ class HomeBase extends React.Component {
     this.getPopularMovies();
   }
 
+  handleChange = event => {
+    this.setState({ [event.target.id]: event.target.value })
+  };
+
+  handleSubmit = event => {
+    //add the stuff to database
+
+  }
+
   render() {
     const { movies, query } = this.state;
     const isSearched = query => item => !query || item.title.toLowerCase().includes(query.toLowerCase());
@@ -71,14 +82,14 @@ class HomeBase extends React.Component {
       <div className={this.props.classes.container}>
       <Paper className={this.props.classes.paper}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
-        <form id="loginForm" onSubmit = {this.handleLogin} >
+        <form id="loginForm" onSubmit = {this.handleSubmit} >
        {/* <Search query={query} onInput={this.onInput} placeholder="Search for Movie Title …" />
         <Movies movies={movies.filter(isSearched(query))} />*/}
         <TextField
             id="movie"
             type="movie"
             required
-            value={this.state.password}
+            value={this.state.movie}
             onChange={this.handleChange}
             label="Movie"
             fullWidth
@@ -89,7 +100,7 @@ class HomeBase extends React.Component {
             id="trigger"
             type="trigger"
             required
-            value={this.state.password}
+            value={this.state.trigger}
             onChange={this.handleChange}
             label="Trigger"
             fullWidth
