@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 //import 'firebase/auth';
 import Typography from '@material-ui/core/Typography';
 import logo from '../imgs/transLogo.png';
+import { auth } from './FirebaseConfig/Fire'
 
 const styles = theme => ({
   container: {
@@ -90,7 +91,8 @@ class LoginBase extends React.Component {
     });
   };
 
-  /*handleReset = event => {
+  handleReset = event => {
+    event.preventDefault();
     var that = this;
     this.props.firebase.sendPasswordResetEmail(this.state.resetEmail).then(function () {
       //Email sent
@@ -118,19 +120,21 @@ class LoginBase extends React.Component {
         that.setState({ open: false, error: '' });
       }
     })
-  };*/
+  };
 
   handleLogin = event => {
     //Firebase login here
     var that = this;
-    /*this.props.firebase.signInWithEmailAndPassword(this.state.email, this.state.password)
+    console.log("got DodgeEm")
+    auth.signInWithEmailAndPassword(this.state.username, this.state.password)
       .then(function (firebaseUser) {
         if (firebaseUser) {
+          console.log("warnk;kj'l")
           that.props.history.push('/home');
         }
       })
       .catch(function (error) {
-        /*var errorCode = error.code;
+        var errorCode = error.code;
 
         switch (errorCode) {
 
@@ -164,9 +168,9 @@ class LoginBase extends React.Component {
             });
           }
 
-        }*/
+        }
         console.log("BOOM");
-      //});
+      });
   };
 
   signUp = () => {
@@ -178,7 +182,7 @@ class LoginBase extends React.Component {
       <div className={this.props.classes.container}>
         <Paper className={this.props.classes.paper}>
           <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
-          <form id="loginForm">
+          <form id="loginForm" onSubmit = {this.handleLogin} >
             <TextField
               id="username"
               type="username"

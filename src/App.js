@@ -14,7 +14,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import PrivRoute from './components/routes/PrivRoute';
 import LoginRoute from './components/routes/LoginRoute';
-import Home from './components/Home';
+import HomeBase from './components/Home';
 //import Profile from './components/Profile';
 import SignInRoute from './components/routes/SignInRoute';
 import SignOutRoute from './components/routes/SignOutRoute';
@@ -99,7 +99,7 @@ class App extends React.Component {
           <Switch>
           <PrivRoute exact
             path="/home"
-            component={Home}
+            component={HomeBase}
             authenticated={this.state.authenticated}
           />
           <PrivRoute exact
