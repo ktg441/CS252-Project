@@ -8,6 +8,7 @@
     "elements": "^0.6.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-icons": "^3.5.0",
     "react-landing-page": "^2.0.2",
     "react-password-strength": "^2.4.0",
     "react-router-dom": "^5.0.0",

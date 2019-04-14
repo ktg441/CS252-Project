@@ -49,7 +49,7 @@ class App extends React.Component {
 
   listenScrollEvent = e => {
     if (window.scrollY > 20) {
-      this.setState({color: '#fca258'})
+      this.setState({color: '#d6792c'})
     } else {
       this.setState({color: 'white'})
     }
