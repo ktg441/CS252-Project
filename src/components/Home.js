@@ -72,9 +72,19 @@ class HomeBase extends React.Component {
       <Paper className={this.props.classes.paper}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleLogin} >
-        <Search query={query} onInput={this.onInput} placeholder="Search for Movie Title …" />
-        <Movies movies={movies.filter(isSearched(query))} />
-          
+       {/* <Search query={query} onInput={this.onInput} placeholder="Search for Movie Title …" />
+        <Movies movies={movies.filter(isSearched(query))} />*/}
+        <TextField
+            id="movie"
+            type="movie"
+            required
+            value={this.state.password}
+            onChange={this.handleChange}
+            label="Movie"
+            fullWidth
+            className={this.props.classes.field}
+            variant="outlined"
+          />
           <TextField
             id="trigger"
             type="trigger"
