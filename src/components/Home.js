@@ -92,7 +92,6 @@ class HomeBase extends React.Component {
       Triggers: this.state.triggers,
     }).then(() => {
       this.handleClickOpen();
-      //window.location.reload();
     }).catch({
 
     })
@@ -100,6 +99,7 @@ class HomeBase extends React.Component {
 
   handleClose = () => {
     this.setState({ open: false });
+    window.location.reload();
   };
 
   handleClickOpen = () => {
