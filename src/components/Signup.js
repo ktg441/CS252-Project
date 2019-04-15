@@ -122,7 +122,7 @@ class SignupBase extends React.Component {
             if(user){
               firebase.firestore().collection('users').doc(user.uid).set({
                 Email: that.state.email,
-                triggers: that.state.triggers,
+                Triggers: that.state.triggers,
               }).then(function (){
                 console.log("WE DID IT");
               }).catch(function(error){
@@ -160,6 +160,7 @@ class SignupBase extends React.Component {
       {key: 'Sexual Assault', text: 'Sexual Assault', value: 'Sexual Assault'},
     ];
 
+    //Stylesheet for the dropdown menu
     const styleLink = document.createElement("link");
     styleLink.rel = "stylesheet";
     styleLink.href = "https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css";

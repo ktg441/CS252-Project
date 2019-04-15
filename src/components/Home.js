@@ -8,10 +8,12 @@ import TextField from '@material-ui/core/TextField/';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import logo from '../imgs/add.png';
-import { auth } from './FirebaseConfig/Fire'
+import { auth } from './FirebaseConfig/Fire';
 import PropTypes from 'prop-types';
-import Movies from './Movie'
-import Search from './Search'
+import Movies from './Movie';
+import Search from './Search';
+import {Dropdown} from 'semantic-ui-react';
+import firebase from 'firebase/app'
 
 
 
@@ -21,9 +23,9 @@ class HomeBase extends React.Component {
     
     this.state = {
       movie: '',
-      trigger: '',
+      triggers: [],
       movies: [],
-      query: ''
+      query: '',
     };
     
     this.onInput = this.onInput.bind(this);
@@ -69,14 +71,53 @@ class HomeBase extends React.Component {
     this.setState({ [event.target.id]: event.target.value })
   };
 
-  handleSubmit = event => {
+  handleMultiChange = (event, {value}) => {
+    this.setState({ triggers: value });
+  }
+
+  handleSubmit = () => {
     //add the stuff to database
+    var user = firebase.auth().currentUser;
+    let db = firebase.firestore();
+    db.collection('Movies').doc(this.state.movie).set({
+      Triggers: this.state.triggers,
+    }).then(() => {
+
+    }).catch({
+
+    })
 
   }
 
   render() {
     const { movies, query } = this.state;
     const isSearched = query => item => !query || item.title.toLowerCase().includes(query.toLowerCase());
+
+    const options = [
+      {key: 'Anime', text: 'Anime', value: 'Anime'},
+      {key: 'Shootings', text: 'Shootings', value: 'Shootings'},
+      {key: 'Blood', text: 'Blood', value: 'Blood'},
+      {key: 'Rape', text: 'Rape', value: 'Rape'},
+      {key: 'War', text: 'War', value: 'War'},
+      {key: 'Gang Violence', text: 'Gang Violence', value: 'Gang Violence'},
+      {key: 'Suicide', text: 'Suicide', value: 'Suicide'},
+      {key: 'Sharks', text: 'Sharks', value: 'Sharks'},
+      {key: 'Ghosts', text: 'Ghosts', value: 'Ghosts'},
+      {key: 'Spiders', text: 'Spiders', value: 'Spiders'},
+      {key: 'Snakes', text: 'Snakes', value: 'Snakes'},
+      {key: 'Dogs', text: 'Dogs', value: 'Dogs'},
+      {key: 'Battery', text: 'Battery', value: 'Battery'},
+      {key: 'Drugs', text: 'Drugs', value: 'Drugs'},
+      {key: 'Flashing Lights', text: 'Flashing Lights', value: 'Flashing Lights'},
+      {key: 'Kidnap', text: 'Kidnap', value: 'Kidnap'},
+      {key: 'Sexual Assault', text: 'Sexual Assault', value: 'Sexual Assault'},
+    ];
+
+    //Stylesheet for the dropdown menu
+    const styleLink = document.createElement("link");
+    styleLink.rel = "stylesheet";
+    styleLink.href = "https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css";
+    document.head.appendChild(styleLink);
 
     return (
       <div className={this.props.classes.container}>
@@ -96,19 +137,9 @@ class HomeBase extends React.Component {
             className={this.props.classes.field}
             variant="outlined"
           />
-          <TextField
-            id="trigger"
-            type="trigger"
-            required
-            value={this.state.trigger}
-            onChange={this.handleChange}
-            label="Trigger"
-            fullWidth
-            className={this.props.classes.field}
-            variant="outlined"
-          />
+          <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
           {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
-          <Button id="signupBtn" onClick={this.signUp} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
+          <Button id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
         </form>
       </Paper>
     </div>
