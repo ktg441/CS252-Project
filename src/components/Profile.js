@@ -51,30 +51,19 @@ class ProfileBase extends React.Component {
                 <h2>Favorite Media</h2>
                 <div className={this.props.classes.mediabox}>
                     <label className={this.props.classes.mediatype}>Movies</label>
+                    <br></br>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
                 </div>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
                 <div className={this.props.classes.mediabox}>
                     <label className={this.props.classes.mediatype}>Books</label>
+                    <br></br>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
                 </div>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
                 <div className={this.props.classes.mediabox}>
                     <label className={this.props.classes.mediatype}>TV Shows</label>
+                    <br></br>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
                 </div>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
             </Paper>
         </div>
     );
@@ -88,9 +77,13 @@ const Profile = compose(
 
 const styles = theme => ({
   container: {
-    marginTop: 80,
+    marginTop: 50,
     marginLeft: 15,
     marginRight: 15,
+    display: 'grid',
+    'grid-gap': '1.5%',
+    'grid-template-columns': '48.5% 48.5%',
+    'grid-auto-rows': 'minmax(min-content, max-content)',
   },
   info: {
     position: 'relative',
@@ -107,28 +100,28 @@ const styles = theme => ({
     'text-decoration': 'underline',
   },
   paperQuarterTop: {
+    'grid-column-start': 1,
+    'grid-column-end' : 2,
+    'grid-row-start': 1,
+    'grid-row-end' : 2,
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
-    float: 'left',
-    margin: 'auto',
-    width: '48.5%',
   },
   paperQuarterBottom: {
+    'grid-column-start': 1,
+    'grid-column-end': 2,
+    'grid-row-start' : 2,
+    'grid-row-end' : 3,
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
-    marginTop: '0.75%',
-    marginBottom: '2%',
-    margin: 'auto',
-    width: '48.5%',
-    float: 'left',
   },
   paperHalf: {
+    'grid-column-start' : 2,
+    'grid-column-end' : 3,
+    'grid-row-start' : 1,
+    'grid-row-end' : 3,
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
-    marginTop: '30px !important',
-    marginLeft: '51.5%',
-    margin: 'auto',
-    'max-width': '47.5%',
   },
   profileimage: {
     color: 'black',
