@@ -13,9 +13,17 @@ import PropTypes from 'prop-types';
 import Movies from './Movie';
 import Search from './Search';
 import {Dropdown} from 'semantic-ui-react';
-import firebase from 'firebase/app'
+import firebase from 'firebase/app';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
 
-
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 class HomeBase extends React.Component {
   constructor(props) {
@@ -26,6 +34,7 @@ class HomeBase extends React.Component {
       triggers: [],
       movies: [],
       query: '',
+      open: false,
     };
     
     this.onInput = this.onInput.bind(this);
@@ -79,15 +88,25 @@ class HomeBase extends React.Component {
     //add the stuff to database
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
-    db.collection('Movies').doc(this.state.movie).update({
+    db.collection('Movies').doc(this.state.movie).set({
       Triggers: this.state.triggers,
     }).then(() => {
-
+      this.handleClickOpen();
+      //window.location.reload();
     }).catch({
 
     })
-
   }
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+
 
   render() {
     const { movies, query } = this.state;
@@ -142,7 +161,33 @@ class HomeBase extends React.Component {
           <Button id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
         </form>
       </Paper>
+
+    <div>
+      <Dialog
+          open={this.state.open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            {"Successfully added a movie!"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Thanks for contributing!
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Done
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </div>
+    
     );
   }
 }
