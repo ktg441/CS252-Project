@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
+    "create-react-class": "^15.6.3",
     "elements": "^0.6.0",
     "firebase": "^5.9.4",
     "prop-types": "^15.7.2",
@@ -16,6 +17,8 @@
     "react-password-strength": "^2.4.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
+    "react-select-box": "^3.0.1",
+    "semantic-ui-react": "^0.86.0",
     "styled-components": "^4.2.0"
   },
   "scripts": {

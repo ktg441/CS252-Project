@@ -12,7 +12,7 @@ import logo from '../imgs/transLogo.png';
 import { auth } from './FirebaseConfig/Fire'
 import app from 'firebase/app';
 import firebase from 'firebase/app'
-import home from './Home'
+import {Dropdown} from 'semantic-ui-react';
 import 'firebase/functions';
 require('firebase/firestore');
 
@@ -65,11 +65,12 @@ class SignupBase extends React.Component {
       this.props.history.push('/home');
     }
     this.state = {
-      username: '',
+      email: '',
       password: '',
       password2: '',
       missingText: '',
       errorMessage: '',
+      triggers: [],
     }
   }
 
@@ -89,12 +90,15 @@ class SignupBase extends React.Component {
     return true
   }
 
+  handleMultiChange = (triggers) => {
+    this.setState({ triggers: triggers })
+  }
+  
+
   handleSubmit = (ev) => {
-    //console.log("hello")
     var that = this;
-    if (this.state.username === "") {
-      //console.log("tst")
-      this.setState({missingText: "Username field cannot be empty"});
+    if (this.state.email === "") {
+      this.setState({missingText: "Email field cannot be empty"});
       return;
     }
     if (this.state.password === "") {
@@ -112,12 +116,12 @@ class SignupBase extends React.Component {
     ev.preventDefault()
     if (this.passwordsMatch()) {
       auth
-        .createUserWithEmailAndPassword(this.state.username, this.state.password)
+        .createUserWithEmailAndPassword(this.state.email, this.state.password)
         .then(function () {
           app.auth().onAuthStateChanged(function (user){
             if(user){
               firebase.firestore().collection('users').doc(user.uid).set({
-                Username: that.state.username,
+                Email: that.state.email,
               }).then(function (){
                 console.log("WE DID IT");
               }).catch(function(error){
@@ -131,12 +135,34 @@ class SignupBase extends React.Component {
     }
   }
 
- 
-
-
   render() {
 
     const { error } = this.state;
+
+    const options = [
+      {key: 'Anime', text: 'Anime', value: 'Anime'},
+      {key: 'Shootings', text: 'Shootings', value: 'Shootings'},
+      {key: 'Blood', text: 'Blood', value: 'Blood'},
+      {key: 'Rape', text: 'Rape', value: 'Rape'},
+      {key: 'War', text: 'War', value: 'War'},
+      {key: 'Gang Violence', text: 'Gang Violence', value: 'Gang Violence'},
+      {key: 'Suicide', text: 'Suicide', value: 'Suicide'},
+      {key: 'Sharks', text: 'Sharks', value: 'Sharks'},
+      {key: 'Ghosts', text: 'Ghosts', value: 'Ghosts'},
+      {key: 'Spiders', text: 'Spiders', value: 'Spiders'},
+      {key: 'Snakes', text: 'Snakes', value: 'Snakes'},
+      {key: 'Dogs', text: 'Dogs', value: 'Dogs'},
+      {key: 'Battery', text: 'Battery', value: 'Battery'},
+      {key: 'Drugs', text: 'Drugs', value: 'Drugs'},
+      {key: 'Flashing Lights', text: 'Flashing Lights', value: 'Flashing Lights'},
+      {key: 'Kidnap', text: 'Kidnap', value: 'Kidnap'},
+      {key: 'Sexual Assault', text: 'Sexual Assault', value: 'Sexual Assault'},
+    ];
+
+    const styleLink = document.createElement("link");
+    styleLink.rel = "stylesheet";
+    styleLink.href = "https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css";
+    document.head.appendChild(styleLink);
 
     return (
       <div className={this.props.classes.container}>
@@ -144,10 +170,10 @@ class SignupBase extends React.Component {
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
           <form id="loginForm" style={{paddingTop:'2%'}} onSubmit={this.handleSubmit}>
             <TextField
-              id="username"
-              type="username"
+              id="email"
+              type="email"
               required
-              value={this.state.username}
+              value={this.state.email}
               onChange={this.handleChange}
               label="Email"
               fullWidth
@@ -179,6 +205,8 @@ class SignupBase extends React.Component {
               className={this.props.classes.field}
               variant="outlined"
             />
+
+            <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options}/>
           </form>
           {<Typography className={this.props.classes.error}>{this.state.missingText}</Typography>}
           <Button id="signup" onClick={this.handleSubmit} variant="contained" color="primary" className={this.props.classes.button}>SIGN UP</Button>
