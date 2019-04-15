@@ -15,7 +15,7 @@ import 'firebase/auth';
 import PrivRoute from './components/routes/PrivRoute';
 import LoginRoute from './components/routes/LoginRoute';
 import HomeBase from './components/Home';
-//import Profile from './components/Profile';
+import Profile from './components/Profile';
 import SignInRoute from './components/routes/SignInRoute';
 import SignOutRoute from './components/routes/SignOutRoute';
 import NotFound from './components/NotFound';
@@ -105,6 +105,11 @@ class App extends React.Component {
           <PrivRoute exact
             path="/logout"
             component={Logout}
+            authenticated={this.state.authenticated}
+          />
+          <PrivRoute exact
+            path="/profile"
+            component={Profile}
             authenticated={this.state.authenticated}
           />
 
