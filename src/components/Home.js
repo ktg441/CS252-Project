@@ -79,7 +79,7 @@ class HomeBase extends React.Component {
     //add the stuff to database
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
-    db.collection('Movies').doc(this.state.movie).set({
+    db.collection('Movies').doc(this.state.movie).update({
       Triggers: this.state.triggers,
     }).then(() => {
 
