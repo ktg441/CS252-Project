@@ -83,7 +83,6 @@ const styles = theme => ({
     display: 'grid',
     'grid-gap': '1.5%',
     'grid-template-columns': '48.5% 48.5%',
-    'grid-auto-rows': 'minmax(min-content, max-content)',
   },
   info: {
     position: 'relative',
