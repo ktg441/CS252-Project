@@ -90,8 +90,8 @@ class SignupBase extends React.Component {
     return true
   }
 
-  handleMultiChange = (triggers) => {
-    this.setState({ triggers: triggers })
+  handleMultiChange = (event, {value}) => {
+      this.setState({ triggers: value });
   }
   
 
@@ -122,6 +122,7 @@ class SignupBase extends React.Component {
             if(user){
               firebase.firestore().collection('users').doc(user.uid).set({
                 Email: that.state.email,
+                triggers: that.state.triggers,
               }).then(function (){
                 console.log("WE DID IT");
               }).catch(function(error){
@@ -206,7 +207,7 @@ class SignupBase extends React.Component {
               variant="outlined"
             />
 
-            <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options}/>
+            <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
           </form>
           {<Typography className={this.props.classes.error}>{this.state.missingText}</Typography>}
           <Button id="signup" onClick={this.handleSubmit} variant="contained" color="primary" className={this.props.classes.button}>SIGN UP</Button>
