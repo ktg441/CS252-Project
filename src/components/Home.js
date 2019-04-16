@@ -221,7 +221,7 @@ itemClicked = (item) => {
           </VerticalTabs>
 
           { activeIndex === 0 && <TabContainer>MOVIES HERE
-            <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary"  className={this.props.classes.button}>Add Movie Trigger</Button>
+            <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>
           </TabContainer> }
           { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
           { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
@@ -232,12 +232,12 @@ itemClicked = (item) => {
         <form id="loginForm" onSubmit = {this.handleSubmit} >
 
         <div onClick={() => this.setState({ isSearching: false })}>
-                <Search
-                    defaultTitle={this.state.title}
-                    search={this.searchMovie}
-                    results={this.state.searchResults}
-                    clicked={this.itemClicked}
-                    searching={this.state.isSearching} />
+          <Search
+              defaultTitle={this.state.title}
+              search={this.searchMovie}
+              results={this.state.searchResults}
+              clicked={this.itemClicked}
+              searching={this.state.isSearching} />
           <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
           {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
           <Button id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
