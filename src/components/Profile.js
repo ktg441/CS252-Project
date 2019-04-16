@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { compose } from 'recompose';
 //import { withFirebase } from './Firebase';
@@ -23,9 +23,13 @@ class ProfileBase extends React.Component {
       name: '',
       email: '',
       triggers: [],
+      mode: 'view',
+      potentialText: '',
     };
     
     this.getUserInfo = this.getUserInfo.bind(this);    
+    this.changeMode = this.changeMode.bind(this);
+    this.renderTextField = this.renderTextField.bind(this);
   }
 
   getUserInfo = () => {
@@ -51,44 +55,83 @@ class ProfileBase extends React.Component {
     this.getUserInfo();
   }
 
+  changeMode() {
+    var that = this;
+    if(that.state.mode === 'edit')
+        that.setState({mode: 'view'});
+    else
+        that.setState({mode: 'edit'});
+  }
+
+  renderButtons() {
+    var that = this;
+    if (that.state.mode === 'edit') 
+      return (
+        <div className={this.props.classes.buttonLine}>
+            <font id="saveBtn" color='green' size="5" onClick={that.changeMode}>✔</font>
+            &nbsp;&nbsp;&nbsp;
+            <font id="discardBtn" color='red' size="5" onClick={that.changeMode}>✘</font>
+        </div>
+      )
+    else {
+      return (
+         <div className={this.props.classes.buttonLine}>
+            <font id="editBtn" size="5" onClick={that.changeMode}>✎</font>
+          </div>
+       ) 
+    }
+  }
+
+  renderTextField() {
+    var that = this;
+    if (that.state.mode != 'edit') return null;
+    return (
+      <TextField type='text' id='bio'></TextField>
+    )
+  }
+
   render() {
 
     return (
-        <div className={this.props.classes.container}>
-            <Paper className={this.props.classes.paperQuarterTop}>
-                <div className={this.props.classes.imgbox}>
-                    <img className={this.props.classes.profileimage} src={profilepic} alt="ProfilePic"/>
-                </div>
-                <div className={this.props.classes.info}>
-                    <h1>{this.state.name}</h1>
-                    <p>Email: {this.state.email}</p>
-                    <p>About Me: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
-                </div>
-            </Paper>
-            <Paper className={this.props.classes.paperQuarterBottom}>
-                <h2>Trigger List</h2>
-                <p>Trigger 1</p>
-                <p>Trigger 2</p>
-                <p>Trigger 3</p>
-            </Paper>
-            <Paper className={this.props.classes.paperHalf}>
-                <h2>Favorite Media</h2>
-                <div className={this.props.classes.mediabox}>
-                    <label className={this.props.classes.mediatype}>Movies</label>
-                    <br></br>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
-                </div>
-                <div className={this.props.classes.mediabox}>
-                    <label className={this.props.classes.mediatype}>Books</label>
-                    <br></br>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
-                </div>
-                <div className={this.props.classes.mediabox}>
-                    <label className={this.props.classes.mediatype}>TV Shows</label>
-                    <br></br>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
-                </div>
-            </Paper>
+        <div>
+            {this.renderButtons()}
+            <div className={this.props.classes.container}>
+                <Paper className={this.props.classes.paperQuarterTop}>
+                    <div className={this.props.classes.imgbox}>
+                        <img className={this.props.classes.profileimage} src={profilepic} alt="ProfilePic"/>
+                    </div>
+                    <div className={this.props.classes.info}>
+                        <h1>{this.state.name}</h1>
+                        <p>Email: {this.state.email}</p>
+                        {this.renderTextField()}
+                        <p>About Me: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
+                    </div>
+                </Paper>
+                <Paper className={this.props.classes.paperQuarterBottom}>
+                    <h2>Trigger List</h2>
+                    <p>Trigger 1</p>
+                    <p>Trigger 2</p>
+                    <p>Trigger 3</p>
+                </Paper>
+                <Paper className={this.props.classes.paperHalf}>
+                    <h2>Favorite Media</h2>
+                    <div className={this.props.classes.mediabox}>
+                        <label className={this.props.classes.mediatype}>Movies</label>
+                        <br></br>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
+                    </div>
+                    <div className={this.props.classes.mediabox}>
+                        <label className={this.props.classes.mediatype}>Books</label>
+                        <br></br>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
+                    </div>
+                    <div className={this.props.classes.mediabox}>
+                        <label className={this.props.classes.mediatype}>TV Shows</label>
+                        <br></br>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
+                    </div>
+                </Paper>
+            </div>
         </div>
     );
   }
@@ -100,8 +143,15 @@ const Profile = compose(
 )(ProfileBase);
 
 const styles = theme => ({
-    container: {
-    marginTop: 50,
+  buttonLine: {
+    marginRight: '3%',
+    marginTop: '1%',
+    display: 'flex',
+    'justify-content': 'flex-end', 
+    cursor: 'pointer',
+  },
+  container: {
+    marginTop: 10,
     marginLeft: 15,
     marginRight: 15,
     display: 'grid',
@@ -162,3 +212,35 @@ const styles = theme => ({
 });
 
 export default withStyles(styles)(Profile);
+
+
+/*
+
+  renderTextField() {
+    if (this.props.mode != 'edit') return null;
+    return (
+      <TextField type='text' floatingLabelText='Image URL' onChange={this.onImageUrlChange}></TextField>
+    )
+  }
+
+
+
+  render() {
+
+      return (
+          <div className="single">
+              <img src={this.state.recipe.imageURL} />
+              <div className='recipeDetails'>
+                  <h1>{this.state.recipe.name}</h1>
+                  {this.renderTextField()}
+                  <IngredientList onIngredientChange={this.onIngredientChange}
+                      onDelete={this.onDelete}
+                      ingredients={this.state.recipe.ingredients}
+                      edit={this.props.edit}
+                      addIngredient={this.addIngredient} />
+                  {this.renderButtons()}
+              </div>
+          </div>
+      );
+  }
+*/
