@@ -107,7 +107,6 @@ class HomeBase extends React.Component {
   };
 
 
-
   render() {
     const { movies, query } = this.state;
     const isSearched = query => item => !query || item.title.toLowerCase().includes(query.toLowerCase());
@@ -162,7 +161,7 @@ class HomeBase extends React.Component {
         </form>
       </Paper>
 
-    <div>
+      <div>
       <Dialog
           open={this.state.open}
           TransitionComponent={Transition}
@@ -186,8 +185,7 @@ class HomeBase extends React.Component {
           </DialogActions>
         </Dialog>
       </div>
-    </div>
-    
+      </div>
     );
   }
 }
