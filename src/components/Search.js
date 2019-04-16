@@ -26,11 +26,7 @@ const Search = (props) => {
             <ul className="results">
                 {props.results.map(item => (
                     <body>
-                      <div className="list-item-with-hover">
-                        <ListItem >
-                          </ListItem >
-                       <div className="list-item-extension"></div>
-                       </div>
+                              
                     <ListItem selected
                      key={item.imdbID} onClick={() => props.clicked(item)}>
                         {item.Title}

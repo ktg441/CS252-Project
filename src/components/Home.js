@@ -149,7 +149,7 @@ itemClicked = (item) => {
     //add the stuff to database
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
-    db.collection('Movies').doc(this.state.movie).set({
+    db.collection('Movies').doc(this.state.title).set({
       Triggers: this.state.triggers,
     }).then(() => {
       this.handleClickOpen();
@@ -199,6 +199,7 @@ itemClicked = (item) => {
     document.head.appendChild(styleLink);
 
     return (
+    
       <div className={this.props.classes.container}>
       <Paper className={this.props.classes.paper}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
