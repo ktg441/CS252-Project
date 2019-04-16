@@ -7,11 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import logo from '../imgs/add.png';
-<<<<<<< HEAD
-=======
-import { auth } from './FirebaseConfig/Fire';
-import PropTypes from 'prop-types';
->>>>>>> 36815d51c6ceda12752229e6a9a584e16a31e8d7
 import Search from './Search';
 import {Dropdown} from 'semantic-ui-react';
 import firebase from 'firebase/app';
@@ -175,6 +170,12 @@ itemClicked = (item) => {
 
   handleTabChange = (_, activeIndex) => this.setState({ activeIndex })
 
+  showTrigger = () => {
+    this.setState({
+      popupDisplay: 'block',
+    });
+  }
+
   render() {
     const { movies, query } = this.state;
     const isSearched = query => item => !query || item.title.toLowerCase().includes(query.toLowerCase());
@@ -211,24 +212,22 @@ itemClicked = (item) => {
 
 
     return (
-<<<<<<< HEAD
       <div className={this.props.classes.tabs}>
-        <div style={{ display: 'flex'}}>
+        <div style={{ display: 'flex', backgroundColor: '#c2cad0', borderRadius: '5px'}}>
           <VerticalTabs value={activeIndex} onChange={this.handleTabChange}>
             <MyTab label='Movies' />
             <MyTab label='Books' />
             <MyTab label='Tv Shows' />
           </VerticalTabs>
 
-          { activeIndex === 0 && <TabContainer>MOVIES HERE</TabContainer> }
+          { activeIndex === 0 && <TabContainer>MOVIES HERE
+            <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary"  className={this.props.classes.button}>Add Movie Trigger</Button>
+          </TabContainer> }
           { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
           { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
         </div>
-=======
-    
->>>>>>> 36815d51c6ceda12752229e6a9a584e16a31e8d7
       <div className={this.props.classes.container}>
-        <Paper className={this.props.classes.paper} style={{display: "none"}}>
+        <Paper className={this.props.classes.paper} style={{display: this.state.popupDisplay}}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
 
@@ -345,7 +344,7 @@ const VerticalTabs = withStyles(theme => ({
 
 const MyTab = withStyles(theme => ({
   selected: {
-    color: 'tomato',
+    color: '#d6792c',
     borderBottom: '2px solid tomato'
   }
 }))(Tab);
