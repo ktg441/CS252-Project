@@ -7,8 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import logo from '../imgs/add.png';
-import { auth } from './FirebaseConfig/Fire';
-import PropTypes from 'prop-types';
 import Search from './Search';
 import {Dropdown} from 'semantic-ui-react';
 import firebase from 'firebase/app';
@@ -21,6 +19,7 @@ import Slide from '@material-ui/core/Slide';
 import axios from 'axios';
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import { Grid } from '@material-ui/core';
 
 
 function Transition(props) {
@@ -209,21 +208,26 @@ itemClicked = (item) => {
     styleLink.href = "https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css";
     document.head.appendChild(styleLink);
 
-    //Tab stuff
-    let content = null;
-
-
     return (
-      <div className={this.props.classes.tabs}>
+      <div className={this.props.classes.tabs} >
         <div style={{ display: 'flex', backgroundColor: '#c2cad0', borderRadius: '5px'}}>
           <VerticalTabs value={activeIndex} onChange={this.handleTabChange}>
-            <MyTab label='Movies' />
-            <MyTab label='Books' />
-            <MyTab label='Tv Shows' />
+            <MyTab label='Movies' style={{fontWeight:'bold'}}/>
+            <MyTab label='Books' style={{fontWeight:'bold'}}/>
+            <MyTab label='Tv Shows' style={{fontWeight:'bold'}}/>
           </VerticalTabs>
 
-          { activeIndex === 0 && <TabContainer>MOVIES HERE
-            <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>
+          { activeIndex === 0 && <TabContainer>
+            <Grid container direction="row" className={this.props.classes.cardGrid}>
+              <Grid item className={this.props.classes.item}>
+              <br/>
+                MOVIE SEARCH HERE
+              </Grid>
+              
+              <Grid item className={this.props.classes.item}>
+                <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>
+              </Grid>
+            </Grid>
           </TabContainer> }
           { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
           { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
@@ -333,6 +337,19 @@ const styles = theme => ({
     'width': '50%',
     'height': '70%',
   },
+  cardGrid: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start', 
+  },
+  item: {
+    margin: 15,
+    "align-content": "center",
+    display: 'block',
+    'marginLeft': 'auto',
+    'marginRight': 'auto',
+  },
 });
 
 const VerticalTabs = withStyles(theme => ({
@@ -353,7 +370,7 @@ const MyTab = withStyles(theme => ({
 
 function TabContainer(props) {
   return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
+    <Typography component="div" style={{ padding: 8 * 3, margin: 'auto'}}>
       {props.children}
     </Typography>
   );
