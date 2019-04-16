@@ -4,12 +4,14 @@ import { compose } from 'recompose';
 //import { withFirebase } from './Firebase';
 import { withRouter } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField/';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import logo from '../imgs/add.png';
+<<<<<<< HEAD
+=======
 import { auth } from './FirebaseConfig/Fire';
 import PropTypes from 'prop-types';
+>>>>>>> 36815d51c6ceda12752229e6a9a584e16a31e8d7
 import Search from './Search';
 import {Dropdown} from 'semantic-ui-react';
 import firebase from 'firebase/app';
@@ -20,6 +22,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import axios from 'axios';
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
 
 
 function Transition(props) {
@@ -40,6 +44,8 @@ class HomeBase extends React.Component {
       movie: {},
       searchResults: [],
       isSearching: false,
+      popupDisplay: 'none',
+      activeIndex: 0,
     };
     
     this.onInput = this.onInput.bind(this);
@@ -167,10 +173,12 @@ itemClicked = (item) => {
     this.setState({ open: true });
   };
 
+  handleTabChange = (_, activeIndex) => this.setState({ activeIndex })
 
   render() {
     const { movies, query } = this.state;
     const isSearched = query => item => !query || item.title.toLowerCase().includes(query.toLowerCase());
+    const { activeIndex } = this.state;
 
     const options = [
       {key: 'Anime', text: 'Anime', value: 'Anime'},
@@ -198,14 +206,32 @@ itemClicked = (item) => {
     styleLink.href = "https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css";
     document.head.appendChild(styleLink);
 
+    //Tab stuff
+    let content = null;
+
+
     return (
+<<<<<<< HEAD
+      <div className={this.props.classes.tabs}>
+        <div style={{ display: 'flex'}}>
+          <VerticalTabs value={activeIndex} onChange={this.handleTabChange}>
+            <MyTab label='Movies' />
+            <MyTab label='Books' />
+            <MyTab label='Tv Shows' />
+          </VerticalTabs>
+
+          { activeIndex === 0 && <TabContainer>MOVIES HERE</TabContainer> }
+          { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
+          { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
+        </div>
+=======
     
+>>>>>>> 36815d51c6ceda12752229e6a9a584e16a31e8d7
       <div className={this.props.classes.container}>
-      <Paper className={this.props.classes.paper}>
+        <Paper className={this.props.classes.paper} style={{display: "none"}}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
-       {/*<Search query={query} onInput={this.onInput} placeholder="Search for Movie Title …" />
-        <Movies movies={movies.filter(isSearched(query))} />*/}
+
         <div onClick={() => this.setState({ isSearching: false })}>
                 <Search
                     defaultTitle={this.state.title}
@@ -220,8 +246,8 @@ itemClicked = (item) => {
         </form>
       </Paper>
 
-      <div>
-      <Dialog
+        <div>
+        <Dialog
           open={this.state.open}
           TransitionComponent={Transition}
           keepMounted
@@ -243,6 +269,7 @@ itemClicked = (item) => {
             </Button>
           </DialogActions>
         </Dialog>
+      </div>
       </div>
       </div>
     );
@@ -297,6 +324,37 @@ const styles = theme => ({
     paddingBottom: 10,
     width: '75%',
   },
+  tabs: {
+    padding: theme.spacing.unit * 2,
+    textAlign: 'center',
+    marginTop: '100px !important',
+    margin: 'auto',
+    'width': '50%',
+    'height': '70%',
+  },
 });
 
+const VerticalTabs = withStyles(theme => ({
+  flexContainer: {
+    flexDirection: 'column'
+  },
+  indicator: {
+    display: 'none',
+  }
+}))(Tabs)
+
+const MyTab = withStyles(theme => ({
+  selected: {
+    color: 'tomato',
+    borderBottom: '2px solid tomato'
+  }
+}))(Tab);
+
+function TabContainer(props) {
+  return (
+    <Typography component="div" style={{ padding: 8 * 3 }}>
+      {props.children}
+    </Typography>
+  );
+}
 export default withStyles(styles)(Home);
