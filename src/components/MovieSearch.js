@@ -45,7 +45,6 @@ class MovieSearch extends React.Component{
         );
       }
 }
-export default withStyles(styles)(MovieSearch);
 
 const styles = theme => ({
     container: {
@@ -80,8 +79,8 @@ const styles = theme => ({
     },
     logo: {
       color: 'black',
-      'max-width': '100px',
-      'max-height': '100px',
+      'max-width': '175px',
+      'max-height': '175px',
       margin: 'auto',
       display: 'block',
       position: 'center',
@@ -93,3 +92,4 @@ const styles = theme => ({
       width: '75%',
     },
   });
+  export default withStyles(styles)(MovieSearch);

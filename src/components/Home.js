@@ -7,11 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import logo from '../imgs/add.png';
-<<<<<<< HEAD
-=======
 import { auth } from './FirebaseConfig/Fire';
 import PropTypes from 'prop-types';
->>>>>>> 36815d51c6ceda12752229e6a9a584e16a31e8d7
 import Search from './Search';
 import {Dropdown} from 'semantic-ui-react';
 import firebase from 'firebase/app';
@@ -211,7 +208,6 @@ itemClicked = (item) => {
 
 
     return (
-<<<<<<< HEAD
       <div className={this.props.classes.tabs}>
         <div style={{ display: 'flex'}}>
           <VerticalTabs value={activeIndex} onChange={this.handleTabChange}>
@@ -224,9 +220,6 @@ itemClicked = (item) => {
           { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
           { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
         </div>
-=======
-    
->>>>>>> 36815d51c6ceda12752229e6a9a584e16a31e8d7
       <div className={this.props.classes.container}>
         <Paper className={this.props.classes.paper} style={{display: "none"}}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
