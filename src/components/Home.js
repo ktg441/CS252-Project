@@ -42,14 +42,31 @@ class HomeBase extends React.Component {
       isSearching: false,
       popupDisplay: 'none',
       activeIndex: 0,
+      dbMovies: [],
     };
     
     this.onInput = this.onInput.bind(this);
   }
   
   componentDidMount() {
-    this.loadMovie()
-}
+    this.loadMovie();
+    //console.log(this.collectMovies());
+    var that = this;
+    this.collectMovies().then(function(value){
+      console.log(value);
+      that.setState({dbMovies: value});
+
+      for(var i = 0; i < value.length; i++){
+        console.log("Title: " + value[i].Name);
+        console.log("Triggers: " + value[i].Triggers);
+      }
+    });
+  }
+
+  async collectMovies() {
+    const snapshot = await firebase.firestore().collection('Movies').get();
+    return snapshot.docs.map(doc => doc.data());
+  }
 
 componentDidUpdate(prevProps, prevState) {
     if (prevState.movieId !== this.state.movieId) {
@@ -135,9 +152,9 @@ itemClicked = (item) => {
       });
   }
   
-  componentDidMount() {
+  /*componentDidMount() {
     this.getPopularMovies();
-  }
+  }*/
 
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value })
@@ -153,6 +170,7 @@ itemClicked = (item) => {
     let db = firebase.firestore();
     db.collection('Movies').doc(this.state.title).set({
       Triggers: this.state.triggers,
+      Name: this.state.title,
     }).then(() => {
       this.handleClickOpen();
     }).catch({
@@ -227,7 +245,15 @@ itemClicked = (item) => {
                 <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>
               </Grid>
             </Grid>
-            
+            <div id="moviePage" className={this.props.classes.movieCard}>
+              <Paper className={this.props.classes.paper}>
+              <Typography><h1>Title</h1></Typography>
+                  <hr color="black" width="10%"/>
+                  <Typography><h3>Triggers:</h3></Typography>
+                  <Typography><h4>Spiders</h4></Typography>
+                  <Typography><h4>Blood</h4></Typography>
+              </Paper>
+            </div>
           </TabContainer> }
           { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
           { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
@@ -285,6 +311,14 @@ const Home = compose(
   //withFirebase,
 )(HomeBase);
 const styles = theme => ({
+  movieCard:{
+    position: 'left',
+    marginTop: 10,
+    margin: theme.spacing.unit,
+    textAlign: 'center',
+    'max-width': '50%',
+    'max-height': '50%',
+  },
   container: {
     marginTop: 80,
     marginLeft: 15,
@@ -334,8 +368,8 @@ const styles = theme => ({
     textAlign: 'center',
     marginTop: '100px !important',
     margin: 'auto',
-    'width': '50%',
-    'height': '70%',
+    'width': '60%',
+    'height': '80%',
   },
   cardGrid: {
     flex: 1,
