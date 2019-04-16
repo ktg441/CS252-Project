@@ -172,6 +172,12 @@ itemClicked = (item) => {
 
   handleTabChange = (_, activeIndex) => this.setState({ activeIndex })
 
+  showTrigger = () => {
+    this.setState({
+      popupDisplay: 'block',
+    });
+  }
+
   render() {
     const { movies, query } = this.state;
     const isSearched = query => item => !query || item.title.toLowerCase().includes(query.toLowerCase());
@@ -209,19 +215,21 @@ itemClicked = (item) => {
 
     return (
       <div className={this.props.classes.tabs}>
-        <div style={{ display: 'flex'}}>
+        <div style={{ display: 'flex', backgroundColor: '#c2cad0', borderRadius: '5px'}}>
           <VerticalTabs value={activeIndex} onChange={this.handleTabChange}>
             <MyTab label='Movies' />
             <MyTab label='Books' />
             <MyTab label='Tv Shows' />
           </VerticalTabs>
 
-          { activeIndex === 0 && <TabContainer>MOVIES HERE</TabContainer> }
+          { activeIndex === 0 && <TabContainer>MOVIES HERE
+            <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary"  className={this.props.classes.button}>Add Movie Trigger</Button>
+          </TabContainer> }
           { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
           { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
         </div>
       <div className={this.props.classes.container}>
-        <Paper className={this.props.classes.paper} style={{display: "none"}}>
+        <Paper className={this.props.classes.paper} style={{display: this.state.popupDisplay}}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
 
@@ -338,7 +346,7 @@ const VerticalTabs = withStyles(theme => ({
 
 const MyTab = withStyles(theme => ({
   selected: {
-    color: 'tomato',
+    color: '#d6792c',
     borderBottom: '2px solid tomato'
   }
 }))(Tab);
