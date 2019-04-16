@@ -36,6 +36,7 @@ class ProfileBase extends React.Component {
         if(doc.exists){
             console.log("Document data:", doc.data());
             that.setState({email: doc.data().Email});
+            that.setState({name: doc.data().Username});
             //console.log("Email: ", that.state.doc.data().Email);
         }
         else {
@@ -59,7 +60,7 @@ class ProfileBase extends React.Component {
                     <img className={this.props.classes.profileimage} src={profilepic} alt="ProfilePic"/>
                 </div>
                 <div className={this.props.classes.info}>
-                    <h1>Your Name Here!</h1>
+                    <h1>{this.state.name}</h1>
                     <p>Email: {this.state.email}</p>
                     <p>About Me: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
                 </div>
