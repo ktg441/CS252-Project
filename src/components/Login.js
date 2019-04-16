@@ -189,7 +189,7 @@ class LoginBase extends React.Component {
               required
               value={this.state.username}
               onChange={this.handleChange}
-              label="Username"
+              label="Email"
               fullWidth
               className={this.props.classes.field}
               variant="outlined"

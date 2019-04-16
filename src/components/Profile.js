@@ -2,6 +2,8 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { compose } from 'recompose';
 //import { withFirebase } from './Firebase';
+import firebase from 'firebase/app';
+import 'firebase/functions';
 import { withRouter } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField/';
@@ -11,19 +13,42 @@ import logo from '../imgs/add.png';
 import profilepic from '../imgs/Fav.png';
 import { auth } from './FirebaseConfig/Fire'
 import PropTypes from 'prop-types';
-import Movies from './Movie'
-import Search from './Search'
-
-
+require('firebase/firestore');
 
 class ProfileBase extends React.Component {
   constructor(props) {
     super(props);
     
     this.state = {
-      
+      name: '',
+      email: '',
+      triggers: [],
     };
     
+    this.getUserInfo = this.getUserInfo.bind(this);    
+  }
+
+  getUserInfo = () => {
+    var user = firebase.auth().currentUser;
+    let db = firebase.firestore();
+    var that = this;
+    db.collection('users').doc(user.uid).get().then(function(doc) {
+        if(doc.exists){
+            console.log("Document data:", doc.data());
+            that.setState({email: doc.data().Email});
+            that.setState({name: doc.data().Username});
+            //console.log("Email: ", that.state.doc.data().Email);
+        }
+        else {
+            console.log("No info found!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting information:", error);
+    });
+  }
+
+  componentDidMount(){
+    this.getUserInfo();
   }
 
   render() {
@@ -35,9 +60,8 @@ class ProfileBase extends React.Component {
                     <img className={this.props.classes.profileimage} src={profilepic} alt="ProfilePic"/>
                 </div>
                 <div className={this.props.classes.info}>
-                    <h1>Your Name Here!</h1>
-                    <p>Email: email@domain.com</p>
-                    <p>Birthday: 12/12/2000</p>
+                    <h1>{this.state.name}</h1>
+                    <p>Email: {this.state.email}</p>
                     <p>About Me: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
                 </div>
             </Paper>
@@ -76,14 +100,13 @@ const Profile = compose(
 )(ProfileBase);
 
 const styles = theme => ({
-  container: {
+    container: {
     marginTop: 50,
     marginLeft: 15,
     marginRight: 15,
     display: 'grid',
     'grid-gap': '1.5%',
     'grid-template-columns': '48.5% 48.5%',
-    'grid-auto-rows': 'minmax(min-content, max-content)',
   },
   info: {
     position: 'relative',

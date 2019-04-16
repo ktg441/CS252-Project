@@ -169,7 +169,6 @@ itemClicked = (item) => {
   };
 
 
-
   render() {
     const { movies, query } = this.state;
     const isSearched = query => item => !query || item.title.toLowerCase().includes(query.toLowerCase());
@@ -221,7 +220,7 @@ itemClicked = (item) => {
         </form>
       </Paper>
 
-    <div>
+      <div>
       <Dialog
           open={this.state.open}
           TransitionComponent={Transition}
@@ -245,8 +244,7 @@ itemClicked = (item) => {
           </DialogActions>
         </Dialog>
       </div>
-    </div>
-    
+      </div>
     );
   }
 }
