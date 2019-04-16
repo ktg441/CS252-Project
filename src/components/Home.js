@@ -10,7 +10,6 @@ import Paper from '@material-ui/core/Paper';
 import logo from '../imgs/add.png';
 import { auth } from './FirebaseConfig/Fire';
 import PropTypes from 'prop-types';
-import Movies from './Movie';
 import Search from './Search';
 import {Dropdown} from 'semantic-ui-react';
 import firebase from 'firebase/app';

@@ -3,7 +3,20 @@ import PropTypes from 'prop-types';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField/';
 import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import "./search.css"
 
+
+
+const styles = theme => ({
+  field: {
+    textAlign: 'left',
+    margin: 'auto',
+    paddingBottom: 10,
+    width: '75%',
+  },
+});
 
 const Search = (props) => {
     let resultList = null
@@ -12,11 +25,18 @@ const Search = (props) => {
         resultList = (
             <ul className="results">
                 {props.results.map(item => (
-                    <List>
-                    <li key={item.imdbID} onClick={() => props.clicked(item)}>
+                    <body>
+                      <div className="list-item-with-hover">
+                        <ListItem >
+                          </ListItem >
+                       <div className="list-item-extension"></div>
+                       </div>
+                    <ListItem selected
+                     key={item.imdbID} onClick={() => props.clicked(item)}>
                         {item.Title}
-                    </li>
-                    </List>
+                    </ListItem>
+                    <br></br>
+                    </body>
                 ))}
             </ul>
         )
@@ -24,7 +44,7 @@ const Search = (props) => {
 
     return (
         <div className="search">
-            <TextField type="search" name="movie-search" value={props.defaultTitle} onChange={props.search} />
+            <TextField style={{textAlign: 'left', margin: 'auto', paddingBottom: 10, width: '75%'}} type="search" name="movie-search" value={props.defaultTitle} onChange={props.search} placeholder="Movie Title" required variant="outlined" label="Movie Title"/>
             {resultList}
         </div>
     );
