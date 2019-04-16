@@ -223,11 +223,11 @@ itemClicked = (item) => {
               <br/>
                 MOVIE SEARCH HERE
               </Grid>
-              
               <Grid item className={this.props.classes.item}>
                 <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>
               </Grid>
             </Grid>
+            
           </TabContainer> }
           { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
           { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
