@@ -15,8 +15,6 @@ import firebase from 'firebase/app'
 import {Dropdown} from 'semantic-ui-react';
 import 'firebase/functions';
 require('firebase/firestore');
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
 
 const styles = theme => ({
@@ -101,7 +99,7 @@ class SignupBase extends React.Component {
   handleSubmit = (ev) => {
     var that = this;
     if (this.state.username === "") {
-      this.setState({missingText: "Username field cannot be empty"});
+      this.setState({missingText: "Name field cannot be empty"});
       return;
     }
     if (this.state.email === "") {
@@ -128,7 +126,7 @@ class SignupBase extends React.Component {
           app.auth().onAuthStateChanged(function (user){
             if(user){
               firebase.firestore().collection('users').doc(user.uid).set({
-                Username: this.state.username,
+                Username: that.state.username,
                 Email: that.state.email,
                 Triggers: that.state.triggers,
               }).then(function (){
@@ -181,11 +179,11 @@ class SignupBase extends React.Component {
           <form id="loginForm" style={{paddingTop:'2%'}} onSubmit={this.handleSubmit}>
           <TextField
               id="username"
-              type="usrename"
+              type="username"
               required
               value={this.state.username}
               onChange={this.handleChange}
-              label="Username"
+              label="Name"
               fullWidth
               className={this.props.classes.field}
               variant="outlined"
