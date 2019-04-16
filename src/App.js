@@ -9,7 +9,7 @@ import SignUp from './components/Signup';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import logo from './imgs/transLogo.png';
+import logo from './imgs/white.png';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import PrivRoute from './components/routes/PrivRoute';
@@ -27,8 +27,8 @@ import Typography from '@material-ui/core/Typography';
 const styles = theme => ({
   logo: {
     color: 'black',
-    'max-width': '100px',
-    'max-height': '100px',
+    'max-width': '175px',
+    'max-height': '175px',
     margin: theme.spacing.unit,
     display: 'block',
   },
@@ -36,6 +36,9 @@ const styles = theme => ({
     margin: '0 auto',
     'text-align': 'right',
     flexGrow: 1,
+  },
+  text:{
+    color: 'white'
   }
 });
 
@@ -45,7 +48,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      color: 'white',
+      color: 'black',
     }
   }
 
@@ -53,7 +56,7 @@ class App extends React.Component {
     if (window.scrollY > 20) {
       this.setState({color: '#d6792c'})
     } else {
-      this.setState({color: 'white'})
+      this.setState({color: 'black'})
     }
   }
 
@@ -99,9 +102,15 @@ class App extends React.Component {
             </Toolbar>
           </AppBar>
           <Switch>
+            <div className={this.props.classes.text}>
           <PrivRoute exact
             path="/home"
             component={HomeBase}
+            authenticated={this.state.authenticated}
+          />
+          <PrivRoute exact
+            path="/movieSearch"
+            component={MovieSearch}
             authenticated={this.state.authenticated}
           />
           <PrivRoute exact
@@ -128,7 +137,7 @@ class App extends React.Component {
             path={"/signup"}
             component={() => <SignUp auth={this.state.authenticated} />}
           />
-
+        </div>
           <Route path="" component={NotFound} />
           </Switch>
         </div>

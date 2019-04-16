@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import logo from '../imgs/add.png';
+import { auth } from './FirebaseConfig/Fire';
+import PropTypes from 'prop-types';
 import Search from './Search';
 import {Dropdown} from 'semantic-ui-react';
 import firebase from 'firebase/app';

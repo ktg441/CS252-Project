@@ -13,7 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 const styles = theme => ({
     link: {
       margin: theme.spacing.unit,
-      color: 'black',
+      color: 'white',
     },
     list: {
       width: 250,
