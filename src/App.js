@@ -19,6 +19,8 @@ import Profile from './components/Profile';
 import SignInRoute from './components/routes/SignInRoute';
 import SignOutRoute from './components/routes/SignOutRoute';
 import NotFound from './components/NotFound';
+import MovieSearch from './components/MovieSearch';
+
 import Typography from '@material-ui/core/Typography';
 
 
