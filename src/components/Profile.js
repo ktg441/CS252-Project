@@ -61,7 +61,6 @@ class ProfileBase extends React.Component {
                 <div className={this.props.classes.info}>
                     <h1>Your Name Here!</h1>
                     <p>Email: {this.state.email}</p>
-                    <p>Birthday: 12/12/2000</p>
                     <p>About Me: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
                 </div>
             </Paper>

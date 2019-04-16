@@ -15,6 +15,8 @@ import firebase from 'firebase/app'
 import {Dropdown} from 'semantic-ui-react';
 import 'firebase/functions';
 require('firebase/firestore');
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const styles = theme => ({
@@ -65,6 +67,7 @@ class SignupBase extends React.Component {
       this.props.history.push('/home');
     }
     this.state = {
+      username: '',
       email: '',
       password: '',
       password2: '',
@@ -97,6 +100,10 @@ class SignupBase extends React.Component {
 
   handleSubmit = (ev) => {
     var that = this;
+    if (this.state.username === "") {
+      this.setState({missingText: "Username field cannot be empty"});
+      return;
+    }
     if (this.state.email === "") {
       this.setState({missingText: "Email field cannot be empty"});
       return;
@@ -121,6 +128,7 @@ class SignupBase extends React.Component {
           app.auth().onAuthStateChanged(function (user){
             if(user){
               firebase.firestore().collection('users').doc(user.uid).set({
+                Username: this.state.username,
                 Email: that.state.email,
                 Triggers: that.state.triggers,
               }).then(function (){
@@ -171,6 +179,18 @@ class SignupBase extends React.Component {
         <Paper className={this.props.classes.paper}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
           <form id="loginForm" style={{paddingTop:'2%'}} onSubmit={this.handleSubmit}>
+          <TextField
+              id="username"
+              type="usrename"
+              required
+              value={this.state.username}
+              onChange={this.handleChange}
+              label="Username"
+              fullWidth
+              className={this.props.classes.field}
+              variant="outlined"
+            />
+
             <TextField
               id="email"
               type="email"
@@ -207,7 +227,7 @@ class SignupBase extends React.Component {
               className={this.props.classes.field}
               variant="outlined"
             />
-
+          
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
           </form>
           {<Typography className={this.props.classes.error}>{this.state.missingText}</Typography>}
