@@ -20,6 +20,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import axios from 'axios';
+
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -30,16 +32,76 @@ class HomeBase extends React.Component {
     super(props);
     
     this.state = {
-      movie: '',
       triggers: [],
       movies: [],
       query: '',
       open: false,
+      movieId: 'tt1442449', // default imdb id (Spartacus)
+      title: '',
+      movie: {},
+      searchResults: [],
+      isSearching: false,
     };
     
     this.onInput = this.onInput.bind(this);
   }
   
+  componentDidMount() {
+    this.loadMovie()
+}
+
+componentDidUpdate(prevProps, prevState) {
+    if (prevState.movieId !== this.state.movieId) {
+        this.loadMovie()
+    }
+}
+
+loadMovie() {
+    axios.get(`http://www.omdbapi.com/?apikey=7abe36ea&i=${this.state.movieId}`)
+        .then(response => {
+            this.setState({ movie: response.data });
+        })
+        .catch(error => {
+            console.log('Opps!', error.message);
+        })
+}
+
+// we use a timeout to prevent the api request to fire immediately as we type
+timeout = null;
+
+searchMovie = (event) => {
+    this.setState({ title: event.target.value, isSearching: true })
+
+    clearTimeout(this.timeout);
+
+    this.timeout = setTimeout(() => {
+        axios.get(`http://www.omdbapi.com/?apikey=7abe36ea&s=${this.state.title}`)
+            .then(response => {
+
+                if (response.data.Search) {
+                    const movies = response.data.Search.slice(0, 5);
+                    this.setState({ searchResults: movies });
+                }
+            })
+            .catch(error => {
+                console.log('Opps!', error.message);
+            })
+    }, 1000)
+
+
+}
+
+// event handler for a search result item that is clicked
+itemClicked = (item) => {
+    this.setState(
+        {
+            movieId: item.imdbID,
+            isSearching: false,
+            title: item.Title,
+        }
+    )
+}
+
   onInput(query) {
     this.setState({
       query
@@ -143,22 +205,19 @@ class HomeBase extends React.Component {
       <Paper className={this.props.classes.paper}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
-       {/* <Search query={query} onInput={this.onInput} placeholder="Search for Movie Title …" />
+       {/*<Search query={query} onInput={this.onInput} placeholder="Search for Movie Title …" />
         <Movies movies={movies.filter(isSearched(query))} />*/}
-        <TextField
-            id="movie"
-            type="movie"
-            required
-            value={this.state.movie}
-            onChange={this.handleChange}
-            label="Movie"
-            fullWidth
-            className={this.props.classes.field}
-            variant="outlined"
-          />
+        <div onClick={() => this.setState({ isSearching: false })}>
+                <Search
+                    defaultTitle={this.state.title}
+                    search={this.searchMovie}
+                    results={this.state.searchResults}
+                    clicked={this.itemClicked}
+                    searching={this.state.isSearching} />
           <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
           {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
           <Button id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
+          </div>
         </form>
       </Paper>
 

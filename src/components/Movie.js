@@ -29,11 +29,10 @@ const Movies = props => (
             label="Movie"
             fullWidth
             variant="outlined"
-            className = {props.field}
-            
+            className = {styles.field}        
   >
     {props.movies.map(movie => (
-        <Movie {...movie} />
+       new Option (JSON.stringify((<Movie {...movie.title} />))) 
     ))}
      </Select>
   </ul>
@@ -41,7 +40,7 @@ const Movies = props => (
 );
 
 Movies.propTypes = {
-  movies: PropTypes.arrayOf(PropTypes.object)
+  movies: PropTypes.arrayOf(PropTypes.string)
 };
 
 export default Movies
@@ -51,6 +50,12 @@ const styles = theme => ({
     marginTop: 80,
     marginLeft: 15,
     marginRight: 15,
+  },
+  movieSelect: {
+    textAlign: 'left',
+    margin: 'auto',
+    paddingBottom: 10,
+    width: '75%',
   },
   button: {
     color: 'white',
