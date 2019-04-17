@@ -8,7 +8,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import "./search.css"
 
 
-
 const styles = theme => ({
   field: {
     textAlign: 'left',
