@@ -210,7 +210,7 @@ itemClicked = (item) => {
                     clicked={this.itemClicked}
                     searching={this.state.isSearching} />
                 {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
-                <Button id="loginBtn" onClick={this.handleLogin} variant="contained" color="primary" form="loginForm" className={this.props.classes.button}>SEARCH</Button>
+                <Button id="loginBtn" onClick={this.handleSubmit} variant="contained" color="primary" form="loginForm" className={this.props.classes.button}>SEARCH</Button>
               </form>
             </Paper>
           </div>
