@@ -20,6 +20,7 @@ import axios from 'axios';
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import { Grid } from '@material-ui/core';
+import ReactDOM from 'react-dom';
 
 
 function Transition(props) {
@@ -42,14 +43,55 @@ class HomeBase extends React.Component {
       isSearching: false,
       popupDisplay: 'none',
       activeIndex: 0,
+      dbMovies: [],
+      userTrigs: [],
     };
     
     this.onInput = this.onInput.bind(this);
   }
   
   componentDidMount() {
-    this.loadMovie()
-}
+    this.loadMovie();
+    
+    
+    var that = this;
+    this.collectMovies().then(function(value){
+      that.setState({dbMovies: value});
+      var movs = [];
+      
+      for(var i = 0; i < value.length; i++){
+        //for(var j = 0; j < that.state.userTrigs.length; j++){
+          //if(value[i].Triggers.includes(that.state.userTrigs[j] === false)){
+            const element = (<Grid item className={that.props.classes.item}>
+              <div className={that.props.classes.movieCard}>
+                <Paper className={that.props.classes.paper}>
+                  <Typography><h1>{value[i].Name}</h1></Typography>
+                  <hr color="black" width="10%"/>
+                  <Typography><h3>Triggers:</h3></Typography>
+                  <Typography><h4>{value[i].Triggers}</h4></Typography>
+                </Paper>
+              </div>
+            </Grid>);
+            movs.push(element);
+          //}
+        //}
+      }
+      
+      ReactDOM.render(movs, document.getElementById('moviePage'));
+    });
+  }
+
+  /*async collectTriggers() {
+    var user = firebase.auth().currentUser.uid;
+    let db = firebase.firestore();
+    const snapshot = await db.collection('users').get();
+    return snapshot.docs.map(doc => doc.data());
+  }*/
+
+  async collectMovies() {
+    const snapshot = await firebase.firestore().collection('Movies').get();
+    return snapshot.docs.map(doc => doc.data());
+  }
 
 componentDidUpdate(prevProps, prevState) {
     if (prevState.movieId !== this.state.movieId) {
@@ -135,9 +177,9 @@ itemClicked = (item) => {
       });
   }
   
-  componentDidMount() {
+  /*componentDidMount() {
     this.getPopularMovies();
-  }
+  }*/
 
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value })
@@ -153,6 +195,7 @@ itemClicked = (item) => {
     let db = firebase.firestore();
     db.collection('Movies').doc(this.state.title).set({
       Triggers: this.state.triggers,
+      Name: this.state.title,
     }).then(() => {
       this.handleClickOpen();
     }).catch({
@@ -183,23 +226,23 @@ itemClicked = (item) => {
     const { activeIndex } = this.state;
 
     const options = [
-      {key: 'Anime', text: 'Anime', value: 'Anime'},
-      {key: 'Shootings', text: 'Shootings', value: 'Shootings'},
-      {key: 'Blood', text: 'Blood', value: 'Blood'},
-      {key: 'Rape', text: 'Rape', value: 'Rape'},
-      {key: 'War', text: 'War', value: 'War'},
-      {key: 'Gang Violence', text: 'Gang Violence', value: 'Gang Violence'},
-      {key: 'Suicide', text: 'Suicide', value: 'Suicide'},
-      {key: 'Sharks', text: 'Sharks', value: 'Sharks'},
-      {key: 'Ghosts', text: 'Ghosts', value: 'Ghosts'},
-      {key: 'Spiders', text: 'Spiders', value: 'Spiders'},
-      {key: 'Snakes', text: 'Snakes', value: 'Snakes'},
-      {key: 'Dogs', text: 'Dogs', value: 'Dogs'},
-      {key: 'Battery', text: 'Battery', value: 'Battery'},
-      {key: 'Drugs', text: 'Drugs', value: 'Drugs'},
-      {key: 'Flashing Lights', text: 'Flashing Lights', value: 'Flashing Lights'},
-      {key: 'Kidnap', text: 'Kidnap', value: 'Kidnap'},
-      {key: 'Sexual Assault', text: 'Sexual Assault', value: 'Sexual Assault'},
+      {key: 'Anime', text: 'Anime', value: 'Anime '},
+      {key: 'Shootings', text: 'Shootings', value: 'Shootings '},
+      {key: 'Blood', text: 'Blood', value: 'Blood '},
+      {key: 'Rape', text: 'Rape', value: 'Rape '},
+      {key: 'War', text: 'War', value: 'War '},
+      {key: 'Gang Violence', text: 'Gang Violence', value: 'Gang Violence '},
+      {key: 'Suicide', text: 'Suicide', value: 'Suicide '},
+      {key: 'Sharks', text: 'Sharks', value: 'Sharks '},
+      {key: 'Ghosts', text: 'Ghosts', value: 'Ghosts '},
+      {key: 'Spiders', text: 'Spiders', value: 'Spiders '},
+      {key: 'Snakes', text: 'Snakes', value: 'Snakes '},
+      {key: 'Dogs', text: 'Dogs', value: 'Dogs '},
+      {key: 'Battery', text: 'Battery', value: 'Battery '},
+      {key: 'Drugs', text: 'Drugs', value: 'Drugs '},
+      {key: 'Flashing Lights', text: 'Flashing Lights', value: 'Flashing Lights '},
+      {key: 'Kidnap', text: 'Kidnap', value: 'Kidnap '},
+      {key: 'Sexual Assault', text: 'Sexual Assault', value: 'Sexual Assault '},
     ];
 
     //Stylesheet for the dropdown menu
@@ -209,8 +252,27 @@ itemClicked = (item) => {
     document.head.appendChild(styleLink);
 
     return (
-      <div className={this.props.classes.tabs} >
-        <div style={{ display: 'flex', backgroundColor: '#c2cad0', borderRadius: '5px'}}>
+      <div className={this.props.classes.container}>
+      <Paper className={this.props.classes.paper} style={{display: this.state.popupDisplay}}>
+        <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
+        <form id="loginForm" onSubmit = {this.handleSubmit} >
+
+          <div onClick={() => this.setState({ isSearching: false })}>
+            <Search
+              defaultTitle={this.state.title}
+              search={this.searchMovie}
+              results={this.state.searchResults}
+              clicked={this.itemClicked}
+              searching={this.state.isSearching} />
+            <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
+            {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
+            <Button id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
+          </div>
+        </form>
+        </Paper>
+      <div>
+      <div className={this.props.classes.tabs}>
+        <div style={{ display: 'flex', backgroundColor: '#c2cad0', borderRadius: '5px', 'max-height':'800px', overflowY: 'scroll'}}>
           <VerticalTabs value={activeIndex} onChange={this.handleTabChange}>
             <MyTab label='Movies' style={{fontWeight:'bold'}}/>
             <MyTab label='Books' style={{fontWeight:'bold'}}/>
@@ -227,31 +289,14 @@ itemClicked = (item) => {
                 <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>
               </Grid>
             </Grid>
-            
+            <Grid id="moviePage" direction="row" className={this.props.classes.cardGrid}>
+
+            </Grid>
           </TabContainer> }
           { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
           { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
         </div>
-      <div className={this.props.classes.container}>
-        <Paper className={this.props.classes.paper} style={{display: this.state.popupDisplay}}>
-        <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
-        <form id="loginForm" onSubmit = {this.handleSubmit} >
 
-        <div onClick={() => this.setState({ isSearching: false })}>
-          <Search
-              defaultTitle={this.state.title}
-              search={this.searchMovie}
-              results={this.state.searchResults}
-              clicked={this.itemClicked}
-              searching={this.state.isSearching} />
-          <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
-          {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
-          <Button id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
-          </div>
-        </form>
-      </Paper>
-
-        <div>
         <Dialog
           open={this.state.open}
           TransitionComponent={Transition}
@@ -285,6 +330,14 @@ const Home = compose(
   //withFirebase,
 )(HomeBase);
 const styles = theme => ({
+  movieCard:{
+    position: 'auto',
+    marginTop: 10,
+    margin: theme.spacing.unit,
+    textAlign: 'center',
+    'max-width': '50%',
+    'max-height': '50%',
+  },
   container: {
     marginTop: 80,
     marginLeft: 15,
@@ -334,8 +387,8 @@ const styles = theme => ({
     textAlign: 'center',
     marginTop: '100px !important',
     margin: 'auto',
-    'width': '50%',
-    'height': '70%',
+    'width': '60%',
+    'height': '80%',
   },
   cardGrid: {
     flex: 1,
@@ -370,9 +423,10 @@ const MyTab = withStyles(theme => ({
 
 function TabContainer(props) {
   return (
-    <Typography component="div" style={{ padding: 8 * 3, margin: 'auto'}}>
+    <Typography component="div" style={{ padding: 8 * 3, margin: 'auto', }}>
       {props.children}
     </Typography>
   );
 }
+
 export default withStyles(styles)(Home);
