@@ -50,6 +50,10 @@ class HomeBase extends React.Component {
     this.onInput = this.onInput.bind(this);
   }
   
+  movieSearch = () => {
+    this.props.history.push('/movieSearch')
+   };
+
   componentDidMount() {
     this.loadMovie();
     
@@ -282,8 +286,7 @@ itemClicked = (item) => {
           { activeIndex === 0 && <TabContainer>
             <Grid container direction="row" className={this.props.classes.cardGrid}>
               <Grid item className={this.props.classes.item}>
-              <br/>
-                MOVIE SEARCH HERE
+              <Button id="submitMovie" onClick={this.movieSearch} variant="contained" color="primary" className={this.props.classes.button}>Search Movie</Button>
               </Grid>
               <Grid item className={this.props.classes.item}>
                 <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>

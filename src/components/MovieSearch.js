@@ -153,6 +153,7 @@ itemClicked = (item) => {
           console.log("Document data:", doc.data());
           //that.setState({email: doc.data().Email});
           //that.setState({name: doc.data().Username});
+          that.setState({trigger: doc.data().Triggers});
           console.log("Triggers: ", doc.data().Triggers);
       }
       else {
@@ -213,6 +214,8 @@ itemClicked = (item) => {
                 <Button id="loginBtn" onClick={this.handleSubmit} variant="contained" color="primary" form="loginForm" className={this.props.classes.button}>SEARCH</Button>
               </form>
             </Paper>
+            <p> {this.state.title} </p>
+            <p> {this.state.trigger} </p>
           </div>
         );
       }
