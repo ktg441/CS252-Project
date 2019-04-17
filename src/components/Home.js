@@ -21,8 +21,6 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import { Grid } from '@material-ui/core';
 import ReactDOM from 'react-dom';
-import MovieSearch from './MovieSearch'
-
 
 
 function Transition(props) {
@@ -210,10 +208,6 @@ itemClicked = (item) => {
     window.location.reload();
   };
 
-  movieSearch = () => {
-   this.props.history.push('/movieSearch')
-  };
-
   handleClickOpen = () => {
     this.setState({ open: true });
   };
@@ -260,9 +254,9 @@ itemClicked = (item) => {
     return (
       <div className={this.props.classes.container}>
       <Paper className={this.props.classes.paper} style={{display: this.state.popupDisplay}}>
-      
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
+
           <div onClick={() => this.setState({ isSearching: false })}>
             <Search
               defaultTitle={this.state.title}
@@ -276,7 +270,6 @@ itemClicked = (item) => {
           </div>
         </form>
         </Paper>
-       
       <div>
       <div className={this.props.classes.tabs}>
         <div style={{ display: 'flex', backgroundColor: '#c2cad0', borderRadius: '5px', 'max-height':'800px', overflowY: 'scroll'}}>
@@ -289,10 +282,11 @@ itemClicked = (item) => {
           { activeIndex === 0 && <TabContainer>
             <Grid container direction="row" className={this.props.classes.cardGrid}>
               <Grid item className={this.props.classes.item}>
-              <Button id="submitMovie" onClick={this.movieSearch} variant="contained" color="primary" className={this.props.classes.button}>Search Movie</Button>
+              <br/>
+                MOVIE SEARCH HERE
               </Grid>
               <Grid item className={this.props.classes.item}>
-                <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>       
+                <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>
               </Grid>
             </Grid>
             <Grid id="moviePage" direction="row" className={this.props.classes.cardGrid}>
