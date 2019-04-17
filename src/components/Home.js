@@ -20,6 +20,7 @@ import axios from 'axios';
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import { Grid } from '@material-ui/core';
+import ReactDOM from 'react-dom';
 
 
 function Transition(props) {
@@ -55,11 +56,20 @@ class HomeBase extends React.Component {
     this.collectMovies().then(function(value){
       console.log(value);
       that.setState({dbMovies: value});
-
+      var movs = [];
+      
       for(var i = 0; i < value.length; i++){
-        console.log("Title: " + value[i].Name);
-        console.log("Triggers: " + value[i].Triggers);
+        const element = (<div className={that.props.classes.movieCard}>
+          <Paper className={that.props.classes.paper}>
+            <Typography><h1>{value[i].Name}</h1></Typography>
+            <hr color="black" width="10%"/>
+            <Typography><h3>Triggers:</h3></Typography>
+            <Typography><h4>{value[i].Triggers}</h4></Typography>
+          </Paper>
+        </div>);
+        movs.push(element);
       }
+      ReactDOM.render(movs, document.getElementById('moviePage'));
     });
   }
 
@@ -245,14 +255,8 @@ itemClicked = (item) => {
                 <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>
               </Grid>
             </Grid>
-            <div id="moviePage" className={this.props.classes.movieCard}>
-              <Paper className={this.props.classes.paper}>
-              <Typography><h1>Title</h1></Typography>
-                  <hr color="black" width="10%"/>
-                  <Typography><h3>Triggers:</h3></Typography>
-                  <Typography><h4>Spiders</h4></Typography>
-                  <Typography><h4>Blood</h4></Typography>
-              </Paper>
+            <div id="moviePage" style={{width:"100%", height:"100%"}}>
+
             </div>
           </TabContainer> }
           { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
@@ -312,7 +316,7 @@ const Home = compose(
 )(HomeBase);
 const styles = theme => ({
   movieCard:{
-    position: 'left',
+    position: 'auto',
     marginTop: 10,
     margin: theme.spacing.unit,
     textAlign: 'center',
@@ -409,4 +413,5 @@ function TabContainer(props) {
     </Typography>
   );
 }
+
 export default withStyles(styles)(Home);
