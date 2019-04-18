@@ -84,13 +84,13 @@ class SignupBase extends React.Component {
 
   handleChange = event => {
 
-      if(event.target.id === 'ans1'){
+      /*if(event.target.id === 'ans1'){
         this.encrChange(event.target.id, event.target.value);
       }else if(event.target.id === 'ans2'){
         this.encrChange(event.target.id, event.target.value);
-      }else{
+      }else{*/
         this.setState({ [event.target.id]: event.target.value })
-      }
+      //}
   }
 
   passChange = info => {
@@ -139,6 +139,8 @@ class SignupBase extends React.Component {
       this.setState({missingText: "Passwords do not match"});
       return;
     }
+    that.encrChange('ans1encr', that.state.ans1);
+    that.encrChange('ans2encr', that.state.ans2);
     ev.preventDefault()
     if (this.passwordsMatch()) {
       auth
@@ -146,6 +148,7 @@ class SignupBase extends React.Component {
         .then(function () {
           app.auth().onAuthStateChanged(function (user){
             if(user){
+
               firebase.firestore().collection('users').doc(user.uid).set({
                 Username: that.state.username,
                 Email: that.state.email,
@@ -170,12 +173,7 @@ class SignupBase extends React.Component {
   encrChange = (id, value) => {
     const Cryptr = require('cryptr');
     const key = new Cryptr('mouse'); //Hide later
-
-    if(id === 'ans1'){
-      this.setState({ ans1encr: key.encrypt(value) })
-    }else{
-      this.setState({ ans1encr: key.encrypt(value) })
-    }
+    this.setState({ [id] : key.encrypt(value) })
   }
 
   render() {
