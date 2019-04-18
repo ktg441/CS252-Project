@@ -152,7 +152,13 @@ itemClicked = (item) => {
           ReactDOM.render(moviePage, document.getElementById('movieTrigs'));
       }
       else {
-          console.log("No info found!");
+          const moviePage = (<Paper className={that.props.classes.paper}>
+            <Typography><h1>{that.state.title}</h1></Typography>
+            <hr color="black" width="10%"/>
+            <Typography><h3>Triggers:</h3></Typography>
+            <Typography><h4>Currently don't have data on this movie.</h4></Typography>
+            </Paper>);
+            ReactDOM.render(moviePage, document.getElementById('movieTrigs'));
       }
   }).catch(function(error) {
       console.log("Error getting information:", error);
