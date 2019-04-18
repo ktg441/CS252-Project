@@ -72,6 +72,8 @@ class SignupBase extends React.Component {
       missingText: '',
       errorMessage: '',
       triggers: [],
+      quest1: '',
+      quest2: '',
     }
   }
 
@@ -129,6 +131,8 @@ class SignupBase extends React.Component {
                 Username: that.state.username,
                 Email: that.state.email,
                 Triggers: that.state.triggers,
+                SecQuest1: that.state.quest1,
+                SecQuests2: that.state.quest2,
               }).then(function (){
                 console.log("WE DID IT");
               }).catch(function(error){
@@ -166,6 +170,27 @@ class SignupBase extends React.Component {
       {key: 'Sexual Assault', text: 'Sexual Assault', value: 'Sexual Assault'},
     ];
 
+    const secQuests = [
+      {key: 'What was your childhood nickname?', text: 'What was your childhood nickname?', value: 'What was your childhood nickname?'},
+      {key: 'In what city or town did your mother and father meet?', text: 'In what city or town did your mother and father meet?', value: 'In what city or town did your mother and father meet?'},
+      {key: 'What is your favorite team?', text: 'What is your favorite team?', value: 'What is your favorite team?'},
+      {key: 'What was your favorite sport in high school?', text: 'What was your favorite sport in high school?', value: 'What was your favorite sport in high school?'},
+      {key: 'What is the first name of the boy or girl that you first kissed?', text: 'What is the first name of the boy or girl that you first kissed?', value: 'What is the first name of the boy or girl that you first kissed?'},
+      {key: 'What was the name of the hospital where you were born?', text: 'What was the name of the hospital where you were born?', value: 'GWhat was the name of the hospital where you were born?'},
+      {key: 'What school did you attend for sixth grade?', text: 'What school did you attend for sixth grade?', value: 'What school did you attend for sixth grade?'},
+      {key: 'In what town was your first job?', text: 'In what town was your first job?', value: 'In what town was your first job?'},
+    ];
+
+    const SecQuests2 = [
+      {key: 'What was the name of the company where you had your first job?', text: 'What was the name of the company where you had your first job?', value: 'What was the name of the company where you had your first job?'},
+      {key: 'What was the last name of your third grade teacher?', text: 'What was the last name of your third grade teacher?', value: 'What was the last name of your third grade teacher?'},
+      {key: 'Who is your childhood sports hero?', text: 'Who is your childhood sports hero?', value: 'Who is your childhood sports hero?'},
+      {key: 'What was the make and model of your first car?', text: 'What was the make and model of your first car?', value: 'What was the make and model of your first car?'},
+      {key: 'What was your favorite food as a child?', text: 'What was your favorite food as a child?', value: 'What was your favorite food as a child?'},
+      {key: 'What is your favorite movie?', text: 'What is your favorite movie?', value: 'What is your favorite movie?'},
+      {key: 'What is the middle name of your oldest child?', text: 'What is the middle name of your oldest child?', value: 'What is the middle name of your oldest child?'},
+      {key: 'What is the name of your favorite childhood friend?', text: 'What is the name of your favorite childhood friend?', value: 'What is the name of your favorite childhood friend?'},
+    ];
     //Stylesheet for the dropdown menu
     const styleLink = document.createElement("link");
     styleLink.rel = "stylesheet";
@@ -225,7 +250,9 @@ class SignupBase extends React.Component {
               className={this.props.classes.field}
               variant="outlined"
             />
-          
+            <Dropdown id="quest1" style={{width:"75%", margin: 'auto'}} placeholder='Security Question 1' fluid selection options={secQuests} onChange={this.handleChange}/>
+            <Dropdown id="quest2" style={{width:"75%", margin: 'auto'}} placeholder='Security Question 2' fluid selection options={SecQuests2} onChange={this.handleChange}/>
+
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
           </form>
           {<Typography className={this.props.classes.error}>{this.state.missingText}</Typography>}
