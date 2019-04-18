@@ -38,7 +38,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   text:{
-    color: 'white'
+    color: 'black'
   }
 });
 

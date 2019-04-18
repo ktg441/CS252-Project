@@ -7,20 +7,10 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import logo from '../imgs/movie.png';
-import { auth } from './FirebaseConfig/Fire';
-import PropTypes from 'prop-types';
 import Search from './Search';
-import {Dropdown} from 'semantic-ui-react';
 import firebase from 'firebase/app';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
 import axios from 'axios';
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
+import ReactDOM from 'react-dom';
 
 class MovieSearch extends React.Component{
   constructor(props) {
@@ -150,11 +140,16 @@ itemClicked = (item) => {
     var that = this;
     db.collection('Movies').doc(that.state.title).get().then(function(doc) {
       if(doc.exists){
-          console.log("Document data:", doc.data());
-          //that.setState({email: doc.data().Email});
-          //that.setState({name: doc.data().Username});
           that.setState({trigger: doc.data().Triggers});
           console.log("Triggers: ", doc.data().Triggers);
+
+        const moviePage = (<Paper className={that.props.classes.paper}>
+          <Typography><h1>{that.state.title}</h1></Typography>
+          <hr color="black" width="10%"/>
+          <Typography><h3>Triggers:</h3></Typography>
+          <Typography><h4>{that.state.trigger}</h4></Typography>
+          </Paper>);
+          ReactDOM.render(moviePage, document.getElementById('movieTrigs'));
       }
       else {
           console.log("No info found!");
@@ -181,7 +176,9 @@ itemClicked = (item) => {
     });
   }
 
-    
+  goBack = () =>{
+    this.props.history.push('/home');
+  }    
 
     render() {
       const { movies, query } = this.state;
@@ -211,11 +208,18 @@ itemClicked = (item) => {
                     clicked={this.itemClicked}
                     searching={this.state.isSearching} />
                 {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
+                <Button id="loginBtn" onClick={this.goBack} variant="contained" color="secondary" form="loginForm" className={this.props.classes.button}>GO BACK</Button>
                 <Button id="loginBtn" onClick={this.handleSubmit} variant="contained" color="primary" form="loginForm" className={this.props.classes.button}>SEARCH</Button>
               </form>
             </Paper>
-            <p> {this.state.title} </p>
-            <p> {this.state.trigger} </p>
+
+            <div id="movieTrigs">
+
+            </div>
+
+            
+            {/*<p> {this.state.title} </p>
+            <p> {this.state.trigger} </p>*/}
           </div>
         );
       }

@@ -224,6 +224,12 @@ itemClicked = (item) => {
     });
   }
 
+  hideTrigger = () => {
+    this.setState({
+      popupDisplay: 'none',
+    });
+  }
+
   render() {
     const { movies, query } = this.state;
     const isSearched = query => item => !query || item.title.toLowerCase().includes(query.toLowerCase());
@@ -270,6 +276,7 @@ itemClicked = (item) => {
               searching={this.state.isSearching} />
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
             {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
+            <Button id="submitMovieclose" onClick={this.hideTrigger} variant="contained" color="secondary" className={this.props.classes.button}>CANCEL</Button>
             <Button id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
           </div>
         </form>
