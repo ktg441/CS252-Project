@@ -17,6 +17,7 @@ import 'firebase/functions';
 require('firebase/firestore');
 
 
+
 const styles = theme => ({
   container: {
     marginTop: 80,
@@ -74,11 +75,22 @@ class SignupBase extends React.Component {
       triggers: [],
       quest1: '',
       quest2: '',
+      ans1: '',
+      ans2: '',
+      ans1encr: '',
+      ans2encr: '',
     }
   }
 
   handleChange = event => {
-    this.setState({ [event.target.id]: event.target.value })
+
+      if(event.target.id === 'ans1'){
+        this.encrChange(event.target.id, event.target.value);
+      }else if(event.target.id === 'ans2'){
+        this.encrChange(event.target.id, event.target.value);
+      }else{
+        this.setState({ [event.target.id]: event.target.value })
+      }
   }
 
   passChange = info => {
@@ -97,6 +109,13 @@ class SignupBase extends React.Component {
       this.setState({ triggers: value });
   }
   
+  handleSingle1Change = (event, {value}) => {
+    this.setState({ quest1: value });
+  }
+
+  handleSingle2Change = (event, {value}) => {
+    this.setState({ quest2: value });
+  }
 
   handleSubmit = (ev) => {
     var that = this;
@@ -132,7 +151,9 @@ class SignupBase extends React.Component {
                 Email: that.state.email,
                 Triggers: that.state.triggers,
                 SecQuest1: that.state.quest1,
-                SecQuests2: that.state.quest2,
+                Ans1: that.state.ans1encr,
+                SecQuest2: that.state.quest2,
+                Ans2: that.state.ans2encr,
               }).then(function (){
                 console.log("WE DID IT");
               }).catch(function(error){
@@ -143,6 +164,17 @@ class SignupBase extends React.Component {
         }).then(() => {
           this.props.history.push('/home');
         }).catch(error => this.setState({ errorMessage: error.message }))
+    }
+  }
+
+  encrChange = (id, value) => {
+    const Cryptr = require('cryptr');
+    const key = new Cryptr('mouse'); //Hide later
+
+    if(id === 'ans1'){
+      this.setState({ ans1encr: key.encrypt(value) })
+    }else{
+      this.setState({ ans1encr: key.encrypt(value) })
     }
   }
 
@@ -250,8 +282,10 @@ class SignupBase extends React.Component {
               className={this.props.classes.field}
               variant="outlined"
             />
-            <Dropdown id="quest1" style={{width:"75%", margin: 'auto'}} placeholder='Security Question 1' fluid selection options={secQuests} onChange={this.handleChange}/>
-            <Dropdown id="quest2" style={{width:"75%", margin: 'auto'}} placeholder='Security Question 2' fluid selection options={SecQuests2} onChange={this.handleChange}/>
+            <Dropdown id="quest1" style={{width:"75%", margin: 'auto'}} placeholder='Security Question 1' fluid selection options={secQuests} onChange={this.handleSingle1Change}/>
+            <TextField id="ans1" type="ans1" required value={this.state.ans1} onChange={this.handleChange} label="First Answer" fullWidth className={this.props.classes.field} variant="outlined"/>
+            <Dropdown id="quest2" style={{width:"75%", margin: 'auto'}} placeholder='Security Question 2' fluid selection options={SecQuests2} onChange={this.handleSingle2Change}/>
+            <TextField id="ans2" type="ans2" required value={this.state.ans2} onChange={this.handleChange} label="Second Answer" fullWidth className={this.props.classes.field} variant="outlined"/>
 
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
           </form>
