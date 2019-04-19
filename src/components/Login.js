@@ -81,6 +81,8 @@ class LoginBase extends React.Component {
       ans1: '',
       ans2: '',
       openSec: false,
+      quest1: '',
+      quest2: '',
     }
 
   }
@@ -110,7 +112,7 @@ class LoginBase extends React.Component {
     })
 
     var users = this.collectUsers();
-
+    
   }
 
   async collectUsers() {
