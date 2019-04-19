@@ -327,7 +327,7 @@ itemClicked = (item) => {
                 <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>
               </Grid>
             </Grid>
-            <Grid id="moviePage" direction="row" className={this.props.classes.cardGrid}>
+            <Grid container id="moviePage" direction="row" className={this.props.classes.cardGrid}>
             
             </Grid>
           </TabContainer>}
@@ -374,8 +374,8 @@ const styles = theme => ({
     marginTop: 10,
     margin: theme.spacing.unit,
     textAlign: 'center',
-    'max-width': '50%',
-    'max-height': '50%',
+    'max-width': '200',
+    'max-height': '200',
   },
   container: {
     marginTop: 80,
