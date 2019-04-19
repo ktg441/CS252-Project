@@ -452,6 +452,8 @@ const VerticalTabs = withStyles(theme => ({
     display: 'flex',
     backgroundColor: 'black',
     color: 'white',
+    justifyContent: 'center', 
+    alignItems: 'center'
   },
   indicator: {
     display: 'none',
