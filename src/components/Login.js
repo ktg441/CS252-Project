@@ -9,7 +9,13 @@ import { withRouter } from 'react-router-dom';
 //import 'firebase/auth';
 import Typography from '@material-ui/core/Typography';
 import logo from '../imgs/transLogo.png';
-import { auth } from './FirebaseConfig/Fire'
+import { auth } from './FirebaseConfig/Fire';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import firebase from 'firebase/app';
 
 const styles = theme => ({
   container: {
@@ -70,7 +76,11 @@ class LoginBase extends React.Component {
       username: '',
       password: '',
       error: '',
+      forgotPass: '',
       open: false,
+      ans1: '',
+      ans2: '',
+      openSec: false,
     }
 
   }
@@ -87,49 +97,33 @@ class LoginBase extends React.Component {
     this.setState({
       open: false,
       error: '',
-      resetEmail: '',
+      forgotPass: '',
+      openSec: false,
     });
   };
 
-  handleReset = event => {
-    event.preventDefault();
-    var that = this;
-    this.props.firebase.sendPasswordResetEmail(this.state.resetEmail).then(function () {
-      //Email sent
-      this.setState({ open: false, error: '' });
 
-    }).catch(function (error) {
-      console.log(error.code);
-      let errorCode = error.code;
-      if (errorCode === 'auth/invalid-email') {
-        that.setState({
-          error: "Invalid email format"
-        });
-      }
-      else if (errorCode === 'auth/user-not-found') {
-        that.setState({
-          error: "Email address not recognized"
-        });
-      }
-      else if (errorCode != null) {
-        that.setState({
-          error: "Error: Please try again later."
-        });
-      }
-      else if (errorCode == null) {
-        that.setState({ open: false, error: '' });
-      }
+  handleQuestions = () => {
+    this.handleClose();
+    this.setState({
+      openSec: true,
     })
-  };
+
+    var users = this.collectUsers();
+
+  }
+
+  async collectUsers() {
+    const snapshot = await firebase.firestore().collection('users').get();
+    return snapshot.docs.map(doc => doc.data());
+  }
 
   handleLogin = event => {
     //Firebase login here
     var that = this;
-    console.log("got DodgeEm")
     auth.signInWithEmailAndPassword(this.state.username, this.state.password)
       .then(function (firebaseUser) {
         if (firebaseUser) {
-          console.log("warnk;kj'l")
           that.props.history.push('/home');
         }
       })
@@ -213,6 +207,87 @@ class LoginBase extends React.Component {
             </Button></div>
           </form>
         </Paper>
+
+        <div>
+          <Dialog
+            open={this.state.open}
+            onClose={this.handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Password Security Questions"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description" style={{ paddingBottom: "2%" }}>
+                Please type the email associated with your account so we can retrieve your security questions.
+              </DialogContentText>
+              <TextField
+                id="forgotPass"
+                type="email"
+                required
+                value={this.state.forgotPass}
+                onChange={this.handleChange}
+                label="Email"
+                fullWidth
+                />
+                {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
+              </DialogContent>
+              <DialogActions>
+              <Button onClick={this.handleClose} color="primary">
+                Cancel
+              </Button>
+               <Button onClick={this.handleQuestions} color="primary">
+                Next
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+
+        <div>
+          <Dialog
+            open={this.state.openSec}
+            onClose={this.handleSecClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Questions"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description" style={{ paddingBottom: "2%" }}>
+                
+              </DialogContentText>
+              <TextField
+                id="ans1"
+                type="answer"
+                required
+                value={this.state.ans1}
+                onChange={this.handleChange}
+                label="Answer 1"
+                fullWidth
+                />
+
+              <DialogContentText id="alert-dialog-description" style={{ paddingBottom: "2%" }}>
+                
+              </DialogContentText>
+                <TextField
+                  id="ans2"
+                  type="answer"
+                  required
+                  value={this.state.ans2}
+                  onChange={this.handleChange}
+                  label="Answer 2"
+                  fullWidth
+                  />
+                {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
+              </DialogContent>
+              <DialogActions>
+              <Button onClick={this.handleClose} color="primary">
+                Cancel
+              </Button>
+               <Button onClick={this.handleQuestions} color="primary">
+                Next
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
       </div>
     );
   }
