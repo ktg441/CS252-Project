@@ -90,8 +90,7 @@ class HomeBase extends React.Component {
           movs.push(element);
         }
       }
-      
-      ReactDOM.render(movs, document.getElementById('moviePage'));
+    ReactDOM.render(movs, document.getElementById('moviePage'));
     });
   }
 
@@ -101,10 +100,7 @@ class HomeBase extends React.Component {
     var that = this;
     db.collection('users').doc(user.uid).get().then(function(doc) {
         if(doc.exists){
-            //console.log("Document data:", doc.data());
             that.setState({userTrigs: doc.data().Triggers});
-            //that.setState({name: doc.data().Username});
-            //console.log("Email: ", that.state.doc.data().Email);
         }
         else {
             console.log("No info found!");
@@ -238,7 +234,11 @@ itemClicked = (item) => {
     this.setState({ open: true });
   };
 
-  handleTabChange = (_, activeIndex) => this.setState({ activeIndex })
+  handleTabChange = (_, activeIndex) => {
+    this.setState({ activeIndex });
+    //ReactDOM.render(this.state.movs1, document.getElementById('moviePage'));
+    this.componentDidMount();
+  }
 
   showTrigger = () => {
     this.setState({
@@ -305,14 +305,20 @@ itemClicked = (item) => {
         </Paper>
       <div>
       <div className={this.props.classes.tabs}>
-        <div style={{ display: 'flex', backgroundColor: '#c2cad0', borderRadius: '5px', 'max-height':'800px', overflowY: 'scroll'}}>
+        {/*<div style={{ display: 'flex', backgroundColor: '#c2cad0', borderRadius: '5px', 'max-height':'800px', overflowY: 'scroll'}}>*/}
+        <Grid direction="row">
+        <Grid item className={this.props.classes.item}>
           <VerticalTabs value={activeIndex} onChange={this.handleTabChange}>
             <MyTab label='Movies' style={{fontWeight:'bold'}}/>
             <MyTab label='Books' style={{fontWeight:'bold'}}/>
             <MyTab label='Tv Shows' style={{fontWeight:'bold'}}/>
           </VerticalTabs>
-
-          { activeIndex === 0 && <TabContainer>
+          </Grid>
+          <Grid item className={this.props.classes.item}>
+          <div style={{ display: 'flex', backgroundColor: '#c2cad0', borderRadius: '5px', 'max-height':'800px', overflowY: 'scroll'}}>
+          { activeIndex === 0 &&
+          
+          <TabContainer>
             <Grid container direction="row" className={this.props.classes.cardGrid}>
               <Grid item className={this.props.classes.item}>
               <Button id="submitMovie" onClick={this.movieSearch} variant="contained" color="primary" className={this.props.classes.button}>Search Movie</Button>
@@ -322,13 +328,14 @@ itemClicked = (item) => {
               </Grid>
             </Grid>
             <Grid id="moviePage" direction="row" className={this.props.classes.cardGrid}>
-
+            
             </Grid>
-          </TabContainer> }
+          </TabContainer>}
           { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
           { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
         </div>
-
+        </Grid>
+        </Grid>
         <Dialog
           open={this.state.open}
           TransitionComponent={Transition}
@@ -439,8 +446,12 @@ const styles = theme => ({
 
 const VerticalTabs = withStyles(theme => ({
   flexContainer: {
-    flexDirection: 'column',
-    position:'sticky'
+    flexDirection: 'row',
+    position:'sticky',
+    margin: 'auto',
+    display: 'flex',
+    backgroundColor: 'black',
+    color: 'white',
   },
   indicator: {
     display: 'none',
