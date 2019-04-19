@@ -54,9 +54,25 @@ class HomeBase extends React.Component {
     this.props.history.push('/movieSearch')
    };
 
+  compTrigs = (arr) => {
+    console.log("HERE");
+    var trigs = this.state.userTrigs;
+    for(var i = 0; i < trigs.length; i++){
+      console.log("Mine: " + trigs[i]);
+      for(var j = 0; j < arr.length; j++){
+        console.log("Film: " + arr[j]);
+        if(trigs[i] === arr[j]){
+          console.log("Inside if");
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   componentDidMount() {
     this.loadMovie();
-    
+    this.getUserTrigs();
     
     var that = this;
     this.collectMovies().then(function(value){
@@ -64,46 +80,56 @@ class HomeBase extends React.Component {
       var movs = [];
       
       for(var i = 0; i < value.length; i++){
-        //for(var j = 0; j < that.state.userTrigs.length; j++){
-          //if(value[i].Triggers.includes(that.state.userTrigs[j] === false)){
-            const element = (<Grid item className={that.props.classes.item}>
-              <div className={that.props.classes.movieCard}>
-                <Paper className={that.props.classes.paper}>
-                  <Typography><h1>{value[i].Name}</h1></Typography>
-                  <hr color="black" width="10%"/>
-                  <Typography><h3>Triggers:</h3></Typography>
-                  <Typography><h4>{value[i].Triggers}</h4></Typography>
-                </Paper>
-              </div>
-            </Grid>);
-            movs.push(element);
-          //}
-        //}
+        if(that.compTrigs(value[i].Triggers) === false){
+          const element = (<Grid item className={that.props.classes.item}>
+            <div className={that.props.classes.movieCard}>
+              <Paper className={that.props.classes.paper}>
+                <Typography><h1>{value[i].Name}</h1></Typography>
+                <hr color="black" width="10%"/>
+                <Typography><h3>Triggers:</h3></Typography>
+                <Typography><h4>{value[i].Triggers}</h4></Typography>
+              </Paper>
+            </div>
+          </Grid>);
+          movs.push(element);
+        }
       }
       
       ReactDOM.render(movs, document.getElementById('moviePage'));
     });
   }
 
-  /*async collectTriggers() {
-    var user = firebase.auth().currentUser.uid;
+  getUserTrigs = () => {
+    var user = firebase.auth().currentUser;
     let db = firebase.firestore();
-    const snapshot = await db.collection('users').get();
-    return snapshot.docs.map(doc => doc.data());
-  }*/
+    var that = this;
+    db.collection('users').doc(user.uid).get().then(function(doc) {
+        if(doc.exists){
+            //console.log("Document data:", doc.data());
+            that.setState({userTrigs: doc.data().Triggers});
+            //that.setState({name: doc.data().Username});
+            //console.log("Email: ", that.state.doc.data().Email);
+        }
+        else {
+            console.log("No info found!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting information:", error);
+    });
+  }
 
   async collectMovies() {
     const snapshot = await firebase.firestore().collection('Movies').get();
     return snapshot.docs.map(doc => doc.data());
   }
 
-componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevState.movieId !== this.state.movieId) {
         this.loadMovie()
     }
-}
+  }
 
-loadMovie() {
+  loadMovie() {
     axios.get(`http://www.omdbapi.com/?apikey=7abe36ea&i=${this.state.movieId}`)
         .then(response => {
             this.setState({ movie: response.data });
@@ -111,7 +137,7 @@ loadMovie() {
         .catch(error => {
             console.log('Opps!', error.message);
         })
-}
+  }
 
 // we use a timeout to prevent the api request to fire immediately as we type
 timeout = null;
@@ -397,7 +423,7 @@ const styles = theme => ({
     textAlign: 'center',
     marginTop: '100px !important',
     margin: 'auto',
-    'width': '60%',
+    'width': '80%',
     'height': '80%',
   },
   cardGrid: {
@@ -417,7 +443,8 @@ const styles = theme => ({
 
 const VerticalTabs = withStyles(theme => ({
   flexContainer: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    position:'sticky'
   },
   indicator: {
     display: 'none',

@@ -1,8 +1,5 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { compose } from 'recompose';
-//import { withFirebase } from './Firebase';
-import { withRouter } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
@@ -121,9 +118,9 @@ itemClicked = (item) => {
       });
   }
   
-  componentDidMount() {
+  /*componentDidMount() {
     this.getPopularMovies();
-  }
+  }*/
 
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value })

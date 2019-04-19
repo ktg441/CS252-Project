@@ -31,7 +31,7 @@ const styles = theme => ({
   paper: {
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
-    marginTop: '100px !important',
+    marginTop: '12px !important',
     margin: 'auto',
     'max-width': '800px',
     'max-height': '800px',
@@ -43,7 +43,7 @@ const styles = theme => ({
     width: '75%',
   },
   button: {
-    marginTop: '10px !important',
+    marginTop: '5px !important',
   },
   error: {
     color: "red",
@@ -83,14 +83,7 @@ class SignupBase extends React.Component {
   }
 
   handleChange = event => {
-
-      /*if(event.target.id === 'ans1'){
-        this.encrChange(event.target.id, event.target.value);
-      }else if(event.target.id === 'ans2'){
-        this.encrChange(event.target.id, event.target.value);
-      }else{*/
-        this.setState({ [event.target.id]: event.target.value })
-      //}
+    this.setState({ [event.target.id]: event.target.value })
   }
 
   passChange = info => {
@@ -177,8 +170,6 @@ class SignupBase extends React.Component {
   }
 
   render() {
-
-    const { error } = this.state;
 
     const options = [
       {key: 'Anime', text: 'Anime', value: 'Anime'},
