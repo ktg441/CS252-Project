@@ -55,14 +55,10 @@ class HomeBase extends React.Component {
    };
 
   compTrigs = (arr) => {
-    console.log("HERE");
     var trigs = this.state.userTrigs;
     for(var i = 0; i < trigs.length; i++){
-      console.log("Mine: " + trigs[i]);
       for(var j = 0; j < arr.length; j++){
-        console.log("Film: " + arr[j]);
         if(trigs[i] === arr[j]){
-          console.log("Inside if");
           return true;
         }
       }
