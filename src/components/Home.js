@@ -140,7 +140,7 @@ searchMovie = (event) => {
     clearTimeout(this.timeout);
 
     this.timeout = setTimeout(() => {
-        axios.get(`http://www.omdbapi.com/?apikey=7abe36ea&s=${this.state.title}`)
+        axios.get(`https://www.omdbapi.com/?apikey=7abe36ea&s=${this.state.title}`)
             .then(response => {
 
                 if (response.data.Search) {
