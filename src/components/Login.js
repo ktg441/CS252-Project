@@ -83,6 +83,8 @@ class LoginBase extends React.Component {
       openSec: false,
       quest1: '',
       quest2: '',
+      encAns1: '',
+      encAns2: '',
     }
 
   }
@@ -99,7 +101,7 @@ class LoginBase extends React.Component {
     this.setState({
       open: false,
       error: '',
-      forgotPass: '',
+      //forgotPass: '',
       openSec: false,
     });
   };
@@ -107,17 +109,47 @@ class LoginBase extends React.Component {
 
   handleQuestions = () => {
     this.handleClose();
+    var that = this;
     this.setState({
       openSec: true,
     })
-
-    var users = this.collectUsers();
-    
+    var em = that.state.forgotPass;
+    this.collectUsers().then(function(value){
+      for(var i = 0; i < value.length; i++){
+        if(value[i].Email === em){
+          that.setState({
+            quest1: value[i].SecQuest1,
+            quest2: value[i].SecQuest2,
+            encAns1: value[i].Ans1,
+            encAns2: value[i].Ans2,
+          });
+          break;
+        }
+      }
+    });
   }
 
   async collectUsers() {
     const snapshot = await firebase.firestore().collection('users').get();
     return snapshot.docs.map(doc => doc.data());
+  }
+
+  submitAnswers = () => {
+    const Cryptr = require('cryptr');
+    const cryptr = new Cryptr('mouse');
+    var that = this;
+    var em = this.state.forgotPass;
+    if(cryptr.decrypt(this.state.encAns1) === this.state.ans1 && cryptr.decrypt(this.state.encAns2) === this.state.ans2){
+      console.log(em);
+      auth.sendPasswordResetEmail(em).then(function(){
+        //Email sent
+        that.setState({
+          openSec: false,
+        });
+      }).catch(function(error){
+        console.log(error);
+      });
+    }
   }
 
   handleLogin = event => {
@@ -254,7 +286,7 @@ class LoginBase extends React.Component {
             <DialogTitle id="alert-dialog-title">{"Questions"}</DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description" style={{ paddingBottom: "2%" }}>
-                
+                <Typography><h2>{this.state.quest1}</h2></Typography>
               </DialogContentText>
               <TextField
                 id="ans1"
@@ -267,7 +299,7 @@ class LoginBase extends React.Component {
                 />
 
               <DialogContentText id="alert-dialog-description" style={{ paddingBottom: "2%" }}>
-                
+                <Typography><h2>{this.state.quest2}</h2></Typography>
               </DialogContentText>
                 <TextField
                   id="ans2"
@@ -284,8 +316,8 @@ class LoginBase extends React.Component {
               <Button onClick={this.handleClose} color="primary">
                 Cancel
               </Button>
-               <Button onClick={this.handleQuestions} color="primary">
-                Next
+               <Button onClick={this.submitAnswers} color="primary">
+                Enter
               </Button>
             </DialogActions>
           </Dialog>
