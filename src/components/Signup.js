@@ -17,6 +17,7 @@ import 'firebase/functions';
 require('firebase/firestore');
 
 
+
 const styles = theme => ({
   container: {
     marginTop: 80,
@@ -30,7 +31,7 @@ const styles = theme => ({
   paper: {
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
-    marginTop: '100px !important',
+    marginTop: '12px !important',
     margin: 'auto',
     'max-width': '800px',
     'max-height': '800px',
@@ -42,7 +43,7 @@ const styles = theme => ({
     width: '75%',
   },
   button: {
-    marginTop: '10px !important',
+    marginTop: '5px !important',
   },
   error: {
     color: "red",
@@ -72,6 +73,12 @@ class SignupBase extends React.Component {
       missingText: '',
       errorMessage: '',
       triggers: [],
+      quest1: '',
+      quest2: '',
+      ans1: '',
+      ans2: '',
+      ans1encr: '',
+      ans2encr: '',
     }
   }
 
@@ -95,6 +102,13 @@ class SignupBase extends React.Component {
       this.setState({ triggers: value });
   }
   
+  handleSingle1Change = (event, {value}) => {
+    this.setState({ quest1: value });
+  }
+
+  handleSingle2Change = (event, {value}) => {
+    this.setState({ quest2: value });
+  }
 
   handleSubmit = (ev) => {
     var that = this;
@@ -118,6 +132,8 @@ class SignupBase extends React.Component {
       this.setState({missingText: "Passwords do not match"});
       return;
     }
+    that.encrChange('ans1encr', that.state.ans1);
+    that.encrChange('ans2encr', that.state.ans2);
     ev.preventDefault()
     if (this.passwordsMatch()) {
       auth
@@ -125,10 +141,15 @@ class SignupBase extends React.Component {
         .then(function () {
           app.auth().onAuthStateChanged(function (user){
             if(user){
+
               firebase.firestore().collection('users').doc(user.uid).set({
                 Username: that.state.username,
                 Email: that.state.email,
                 Triggers: that.state.triggers,
+                SecQuest1: that.state.quest1,
+                Ans1: that.state.ans1encr,
+                SecQuest2: that.state.quest2,
+                Ans2: that.state.ans2encr,
               }).then(function (){
                 console.log("WE DID IT");
               }).catch(function(error){
@@ -142,30 +163,55 @@ class SignupBase extends React.Component {
     }
   }
 
+  encrChange = (id, value) => {
+    const Cryptr = require('cryptr');
+    const key = new Cryptr('mouse'); //Hide later
+    this.setState({ [id] : key.encrypt(value) })
+  }
+
   render() {
 
-    const { error } = this.state;
-
     const options = [
-      {key: 'Anime', text: 'Anime', value: 'Anime'},
-      {key: 'Shootings', text: 'Shootings', value: 'Shootings'},
-      {key: 'Blood', text: 'Blood', value: 'Blood'},
-      {key: 'Rape', text: 'Rape', value: 'Rape'},
-      {key: 'War', text: 'War', value: 'War'},
-      {key: 'Gang Violence', text: 'Gang Violence', value: 'Gang Violence'},
-      {key: 'Suicide', text: 'Suicide', value: 'Suicide'},
-      {key: 'Sharks', text: 'Sharks', value: 'Sharks'},
-      {key: 'Ghosts', text: 'Ghosts', value: 'Ghosts'},
-      {key: 'Spiders', text: 'Spiders', value: 'Spiders'},
-      {key: 'Snakes', text: 'Snakes', value: 'Snakes'},
-      {key: 'Dogs', text: 'Dogs', value: 'Dogs'},
-      {key: 'Battery', text: 'Battery', value: 'Battery'},
-      {key: 'Drugs', text: 'Drugs', value: 'Drugs'},
-      {key: 'Flashing Lights', text: 'Flashing Lights', value: 'Flashing Lights'},
-      {key: 'Kidnap', text: 'Kidnap', value: 'Kidnap'},
-      {key: 'Sexual Assault', text: 'Sexual Assault', value: 'Sexual Assault'},
+      {key: 'Anime ', text: 'Anime ', value: 'Anime '},
+      {key: 'Shootings ', text: 'Shootings ', value: 'Shootings '},
+      {key: 'Blood ', text: 'Blood ', value: 'Blood '},
+      {key: 'Rape ', text: 'Rape ', value: 'Rape '},
+      {key: 'War ', text: 'War ', value: 'War '},
+      {key: 'Gang Violence ', text: 'Gang Violence ', value: 'Gang Violence '},
+      {key: 'Suicide ', text: 'Suicide ', value: 'Suicide '},
+      {key: 'Sharks ', text: 'Sharks ', value: 'Sharks '},
+      {key: 'Ghosts ', text: 'Ghosts ', value: 'Ghosts '},
+      {key: 'Spiders ', text: 'Spiders ', value: 'Spiders '},
+      {key: 'Snakes ', text: 'Snakes ', value: 'Snakes '},
+      {key: 'Dogs ', text: 'Dogs ', value: 'Dogs '},
+      {key: 'Battery ', text: 'Battery ', value: 'Battery '},
+      {key: 'Drugs ', text: 'Drugs ', value: 'Drugs '},
+      {key: 'Flashing Lights ', text: 'Flashing Lights ', value: 'Flashing Lights '},
+      {key: 'Kidnap ', text: 'Kidnap ', value: 'Kidnap '},
+      {key: 'Sexual Assault ', text: 'Sexual Assault ', value: 'Sexual Assault '},
     ];
 
+    const secQuests = [
+      {key: 'What was your childhood nickname?', text: 'What was your childhood nickname?', value: 'What was your childhood nickname?'},
+      {key: 'In what city or town did your mother and father meet?', text: 'In what city or town did your mother and father meet?', value: 'In what city or town did your mother and father meet?'},
+      {key: 'What is your favorite team?', text: 'What is your favorite team?', value: 'What is your favorite team?'},
+      {key: 'What was your favorite sport in high school?', text: 'What was your favorite sport in high school?', value: 'What was your favorite sport in high school?'},
+      {key: 'What is the first name of the boy or girl that you first kissed?', text: 'What is the first name of the boy or girl that you first kissed?', value: 'What is the first name of the boy or girl that you first kissed?'},
+      {key: 'What was the name of the hospital where you were born?', text: 'What was the name of the hospital where you were born?', value: 'GWhat was the name of the hospital where you were born?'},
+      {key: 'What school did you attend for sixth grade?', text: 'What school did you attend for sixth grade?', value: 'What school did you attend for sixth grade?'},
+      {key: 'In what town was your first job?', text: 'In what town was your first job?', value: 'In what town was your first job?'},
+    ];
+
+    const SecQuests2 = [
+      {key: 'What was the name of the company where you had your first job?', text: 'What was the name of the company where you had your first job?', value: 'What was the name of the company where you had your first job?'},
+      {key: 'What was the last name of your third grade teacher?', text: 'What was the last name of your third grade teacher?', value: 'What was the last name of your third grade teacher?'},
+      {key: 'Who is your childhood sports hero?', text: 'Who is your childhood sports hero?', value: 'Who is your childhood sports hero?'},
+      {key: 'What was the make and model of your first car?', text: 'What was the make and model of your first car?', value: 'What was the make and model of your first car?'},
+      {key: 'What was your favorite food as a child?', text: 'What was your favorite food as a child?', value: 'What was your favorite food as a child?'},
+      {key: 'What is your favorite movie?', text: 'What is your favorite movie?', value: 'What is your favorite movie?'},
+      {key: 'What is the middle name of your oldest child?', text: 'What is the middle name of your oldest child?', value: 'What is the middle name of your oldest child?'},
+      {key: 'What is the name of your favorite childhood friend?', text: 'What is the name of your favorite childhood friend?', value: 'What is the name of your favorite childhood friend?'},
+    ];
     //Stylesheet for the dropdown menu
     const styleLink = document.createElement("link");
     styleLink.rel = "stylesheet";
@@ -225,7 +271,11 @@ class SignupBase extends React.Component {
               className={this.props.classes.field}
               variant="outlined"
             />
-          
+            <Dropdown id="quest1" style={{width:"75%", margin: 'auto'}} placeholder='Security Question 1' fluid selection options={secQuests} onChange={this.handleSingle1Change}/>
+            <TextField id="ans1" type="ans1" required value={this.state.ans1} onChange={this.handleChange} label="First Answer" fullWidth className={this.props.classes.field} variant="outlined"/>
+            <Dropdown id="quest2" style={{width:"75%", margin: 'auto'}} placeholder='Security Question 2' fluid selection options={SecQuests2} onChange={this.handleSingle2Change}/>
+            <TextField id="ans2" type="ans2" required value={this.state.ans2} onChange={this.handleChange} label="Second Answer" fullWidth className={this.props.classes.field} variant="outlined"/>
+
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
           </form>
           {<Typography className={this.props.classes.error}>{this.state.missingText}</Typography>}

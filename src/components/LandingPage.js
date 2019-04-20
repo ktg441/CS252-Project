@@ -50,9 +50,7 @@ class LandingPage extends React.Component {
             <CallToAction id='signUpBtn' href="/signup" bg='#f28a35' color='white' style={{borderRadius: 100}} mr={3}>Be Safe</CallToAction>
             <ScrollDownIndicator/>
             </Hero>
-            <Section
-               heading="What We Do"
-            >
+            <Section heading="What We Do" color="black">
             <hr color="black" width="20%"/>
             <Grid container direction="row" className={this.props.classes.cardGrid}>
               <Grid item className={this.props.classes.item}>
@@ -88,10 +86,7 @@ class LandingPage extends React.Component {
             </Grid>
             </Section>
 
-            <Section
-               heading="Who We Are"
-               bg="#cdd2d8"
-            >
+            <Section heading="Who We Are" bg="#cdd2d8" color="black">
             <hr color="black" width="20%"/>
             <Grid container direction="row" className={this.props.classes.cardGrid}>
               <Grid item className={this.props.classes.item}>
