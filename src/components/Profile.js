@@ -5,11 +5,11 @@ import { compose } from 'recompose';
 import firebase from 'firebase/app';
 import 'firebase/functions';
 import { withRouter } from 'react-router-dom';
-import Typography from '@material-ui/core/Typography';
+//import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField/';
-import Button from '@material-ui/core/Button';
+//import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import logo from '../imgs/add.png';
+//import logo from '../imgs/add.png';
 import profilepic from '../imgs/Fav.png';
 import { auth } from './FirebaseConfig/Fire'
 import PropTypes from 'prop-types';
@@ -25,10 +25,12 @@ class ProfileBase extends React.Component {
       triggers: [],
       mode: 'view',
       potentialText: '',
+      about: '',
     };
     
     this.getUserInfo = this.getUserInfo.bind(this);    
-    this.changeMode = this.changeMode.bind(this);
+    this.changeMode = this.changeCheckMode.bind(this);
+    this.changeMode = this.changeXMode.bind(this);
     this.renderTextField = this.renderTextField.bind(this);
   }
 
@@ -41,6 +43,8 @@ class ProfileBase extends React.Component {
             console.log("Document data:", doc.data());
             that.setState({email: doc.data().Email});
             that.setState({name: doc.data().Username});
+            that.setState({triggers: doc.data().Triggers});
+            that.setState({about: doc.data().AboutMe});
             //console.log("Email: ", that.state.doc.data().Email);
         }
         else {
@@ -55,7 +59,25 @@ class ProfileBase extends React.Component {
     this.getUserInfo();
   }
 
-  changeMode() {
+  changeCheckMode = () => {
+    var amb = document.getElementById('bio');
+    var user = firebase.auth().currentUser;
+    let db = firebase.firestore();
+    var that = this;
+    db.collection('users').doc(user.uid).update({
+        AboutMe: amb.value,
+    })
+
+    this.setState({about: amb.value});
+
+    if(this.state.mode === 'edit')
+        this.setState({mode: 'view'});
+    else
+        this.setState({mode: 'edit'});
+
+  }
+
+  changeXMode = () => {
     var that = this;
     if(that.state.mode === 'edit')
         that.setState({mode: 'view'});
@@ -68,9 +90,9 @@ class ProfileBase extends React.Component {
     if (that.state.mode === 'edit') 
       return (
         <div className={this.props.classes.buttonLine}>
-            <font id="saveBtn" color='green' size="5" onClick={that.changeMode}>✔</font>
+            <font id="saveBtn" color='green' size="5" onClick={that.changeCheckMode}>✔</font>
             &nbsp;&nbsp;&nbsp;
-            <font id="discardBtn" color='red' size="5" onClick={that.changeMode}>✘</font>
+            <font id="discardBtn" color='red' size="5" onClick={that.changeXMode}>✘</font>
         </div>
       )
     else {
@@ -82,12 +104,16 @@ class ProfileBase extends React.Component {
     }
   }
 
-  renderTextField() {
-    var that = this;
-    if (that.state.mode != 'edit') return null;
+  renderTextField = () => {
+    //var that = this;
+    if (this.state.mode !== 'edit'){
+        return(
+            <p>About Me: {this.state.about}</p>
+        );
+    }
     return (
-      <TextField type='text' id='bio'></TextField>
-    )
+      <p>About Me: <TextField type='text' id='bio'></TextField></p>
+    );
   }
 
   render() {
@@ -104,7 +130,6 @@ class ProfileBase extends React.Component {
                         <h1>{this.state.name}</h1>
                         <p>Email: {this.state.email}</p>
                         {this.renderTextField()}
-                        <p>About Me: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
                     </div>
                 </Paper>
                 <Paper className={this.props.classes.paperQuarterBottom}>

@@ -150,6 +150,7 @@ class SignupBase extends React.Component {
                 Ans1: that.state.ans1encr,
                 SecQuest2: that.state.quest2,
                 Ans2: that.state.ans2encr,
+                AboutMe: 'I am a wonderful human being!',
               }).then(function (){
                 console.log("WE DID IT");
               }).catch(function(error){

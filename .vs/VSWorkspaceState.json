@@ -3,8 +3,9 @@
     "",
     "\\public",
     "\\src",
-    "\\src\\imgs"
+    "\\src\\components",
+    "\\src\\components\\FirebaseConfig"
   ],
-  "SelectedNode": "\\public\\favicon.ico",
+  "SelectedNode": "\\public\\index.html",
   "PreviewInSolutionExplorer": false
 }
