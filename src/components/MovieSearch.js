@@ -186,13 +186,6 @@ itemClicked = (item) => {
                     results={this.state.searchResults}
                     clicked={this.itemClicked}
                     searching={this.state.isSearching} />
-                <BookSearch
-                    defaultTitle={this.state.title}
-                    search={this.searchBook}
-                    results={this.state.searchResults}
-                    clicked={this.itemClicked}
-                    searching={this.state.isSearching} />
-             
 
                 {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
                 <Button id="loginBtn" onClick={this.goBack} variant="contained" color="secondary" form="loginForm" className={this.props.classes.button}>GO BACK</Button>

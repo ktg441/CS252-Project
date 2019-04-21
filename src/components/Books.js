@@ -34,26 +34,7 @@ class Books extends React.Component{
     this.searchBook = this.searchBook.bind(this);
 
   }
-  
-  componentDidMount() {
-    this.loadMovie()
-}
 
-componentDidUpdate(prevProps, prevState) {
-    if (prevState.movieId !== this.state.movieId) {
-        this.loadMovie()
-    }
-}
-
-loadMovie() {
-    axios.get(`http://www.omdbapi.com/?apikey=7abe36ea&i=${this.state.movieId}`)
-        .then(response => {
-            this.setState({ movie: response.data });
-        })
-        .catch(error => {
-            console.log('Opps!', error.message);
-        })
-}
 
 // we use a timeout to prevent the api request to fire immediately as we type
 timeout = null;
@@ -127,18 +108,20 @@ itemClicked = (item) => {
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
     var that = this;
-    db.collection('Books').doc(that.state.title).get().then(function(doc) {
+    var title = that.state.title;
+    //console.log(this.state.title);
+    db.collection('Books').doc(title).get().then(function(doc) {
       if(doc.exists){
-          that.setState({trigger: doc.data().Triggers});
-          console.log("Triggers: ", doc.data().Triggers);
+          that.setState({triggers: doc.data().Triggers});
+          //console.log("Triggers: ", doc.data().Triggers);
 
-        const moviePage = (<Paper className={that.props.classes.paper}>
+        const bookPage = (<Paper className={that.props.classes.paper}>
           <Typography><h1>{that.state.title}</h1></Typography>
           <hr color="black" width="10%"/>
           <Typography><h3>Triggers:</h3></Typography>
-          <Typography><h4>{that.state.trigger}</h4></Typography>
+          <Typography><h4>{that.state.triggers}</h4></Typography>
           </Paper>);
-          ReactDOM.render(moviePage, document.getElementById('movieTrigs'));
+          ReactDOM.render(bookPage, document.getElementById('bookTrigs'));
       }
       else {
           const moviePage = (<Paper className={that.props.classes.paper}>
@@ -147,7 +130,7 @@ itemClicked = (item) => {
             <Typography><h3>Triggers:</h3></Typography>
             <Typography><h4>Currently don't have data on this book.</h4></Typography>
             </Paper>);
-            ReactDOM.render(moviePage, document.getElementById('movieTrigs'));
+            ReactDOM.render(moviePage, document.getElementById('bookTrigs'));
       }
   }).catch(function(error) {
       console.log("Error getting information:", error);
@@ -192,7 +175,7 @@ itemClicked = (item) => {
                 <Button id="loginBtn" onClick={this.handleSubmit} variant="contained" color="primary" form="loginForm" className={this.props.classes.button}>SEARCH</Button>
               </form>
             </Paper>
-            <div id="movieTrigs">
+            <div id="bookTrigs">
             </div>
             
             {/*<p> {this.state.title} </p>
