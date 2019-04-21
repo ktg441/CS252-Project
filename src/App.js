@@ -108,7 +108,7 @@ class App extends React.Component {
             component={HomeBase}
             authenticated={this.state.authenticated}
           />
-          <PrivRoute exact
+          <Route exact
             path="/movieSearch"
             component={MovieSearch}
             authenticated={this.state.authenticated}
