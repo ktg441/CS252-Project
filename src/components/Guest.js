@@ -21,13 +21,14 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import { Grid } from '@material-ui/core';
 import ReactDOM from 'react-dom';
+import "./CSSStuff.css"
 
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-class HomeBase extends React.Component {
+class Guest extends React.Component {
   constructor(props) {
     super(props);
     
@@ -68,9 +69,7 @@ class HomeBase extends React.Component {
   }
 
   componentDidMount() {
-    this.loadMovie();
-    this.getUserTrigs();
-    
+    this.loadMovie();    
     var that = this;
     this.collectMovies().then(function(value){
       that.setState({dbMovies: value});
@@ -95,23 +94,7 @@ class HomeBase extends React.Component {
     });
   }
 
-  getUserTrigs = () => {
-    var user = firebase.auth().currentUser;
-    let db = firebase.firestore();
-    var that = this;
-    db.collection('users').doc(user.uid).get().then(function(doc) {
-        if(doc.exists){
-            that.setState({userTrigs: doc.data().Triggers});
-            that.setState({timeCreated: firebase.firestore.FieldValue.serverTimestamp()
-            })
-        }
-        else {
-            console.log("No info found!");
-        }
-    }).catch(function(error) {
-        console.log("Error getting information:", error);
-    });
-  }
+  
 
   async collectMovies() {
     const snapshot = await firebase.firestore().collection('Movies').get();
@@ -291,9 +274,9 @@ itemClicked = (item) => {
     return (
       <div className={this.props.classes.container}>
       <Paper className={this.props.classes.paper} style={{display: this.state.popupDisplay}}>
+      <div class = "fadeInDown">
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
-
           <div onClick={() => this.setState({ isSearching: false })}>
             <Search
               defaultTitle={this.state.title}
@@ -307,10 +290,12 @@ itemClicked = (item) => {
             <Button id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
           </div>
         </form>
+        </div>
         </Paper>
       <div>
       <div className={this.props.classes.tabs}>
         {/*<div style={{ display: 'flex', backgroundColor: '#c2cad0', borderRadius: '5px', 'max-height':'800px', overflowY: 'scroll'}}>*/}
+        <div class = "fadeInDown">
         <Grid direction="row">
         <Grid item className={this.props.classes.item}>
           <VerticalTabs value={activeIndex} onChange={this.handleTabChange}>
@@ -332,6 +317,7 @@ itemClicked = (item) => {
                 <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>
               </Grid>
             </Grid>
+           
             <Grid container id="moviePage" direction="row" className={this.props.classes.cardGrid}>
             
             </Grid>
@@ -341,6 +327,7 @@ itemClicked = (item) => {
         </div>
         </Grid>
         </Grid>
+        </div>
         <Dialog
           open={this.state.open}
           TransitionComponent={Transition}
@@ -369,10 +356,10 @@ itemClicked = (item) => {
     );
   }
 }
-const Home = compose(
+const Guests = compose(
   withRouter,
   //withFirebase,
-)(HomeBase);
+)(Guest);
 const styles = theme => ({
   movieCard:{
     position: 'auto',
@@ -480,4 +467,4 @@ function TabContainer(props) {
   );
 }
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(Guests);

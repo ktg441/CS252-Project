@@ -20,6 +20,8 @@ import SignInRoute from './components/routes/SignInRoute';
 import SignOutRoute from './components/routes/SignOutRoute';
 import NotFound from './components/NotFound';
 import MovieSearch from './components/MovieSearch';
+import Guest from './components/Guest';
+
 
 
 const styles = theme => ({
@@ -130,6 +132,11 @@ class App extends React.Component {
           <Route exact
             path={"/login"}
             component={() => <Login auth={this.state.authenticated} />}
+          />
+           <Route exact
+            path={"/guest"}
+            component={Guest}
+            authenticated={this.state.authenticated}
           />
           <Route exact
             path={"/signup"}
