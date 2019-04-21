@@ -21,6 +21,7 @@ import SignOutRoute from './components/routes/SignOutRoute';
 import NotFound from './components/NotFound';
 import MovieSearch from './components/MovieSearch';
 import Guest from './components/Guest';
+import Books from './components/Books';
 
 
 
@@ -111,6 +112,11 @@ class App extends React.Component {
           <Route exact
             path="/movieSearch"
             component={MovieSearch}
+            authenticated={this.state.authenticated}
+          />
+          <Route exact
+            path="/book"
+            component={Books}
             authenticated={this.state.authenticated}
           />
           <PrivRoute exact

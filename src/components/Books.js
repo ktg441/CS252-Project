@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import logo from '../imgs/movie.png';
+import logo from '../imgs/searchb.png';
 import Search from './Search';
 import BookSearch from './BookSearch';
 
@@ -13,7 +13,7 @@ import ReactDOM from 'react-dom';
 import ListItem from '@material-ui/core/ListItem';
 
 
-class MovieSearch extends React.Component{
+class Books extends React.Component{
   constructor(props) {
     super(props);
     
@@ -127,7 +127,7 @@ itemClicked = (item) => {
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
     var that = this;
-    db.collection('Movies').doc(that.state.title).get().then(function(doc) {
+    db.collection('Books').doc(that.state.title).get().then(function(doc) {
       if(doc.exists){
           that.setState({trigger: doc.data().Triggers});
           console.log("Triggers: ", doc.data().Triggers);
@@ -145,7 +145,7 @@ itemClicked = (item) => {
             <Typography><h1>{that.state.title}</h1></Typography>
             <hr color="black" width="10%"/>
             <Typography><h3>Triggers:</h3></Typography>
-            <Typography><h4>Currently don't have data on this movie.</h4></Typography>
+            <Typography><h4>Currently don't have data on this book.</h4></Typography>
             </Paper>);
             ReactDOM.render(moviePage, document.getElementById('movieTrigs'));
       }
@@ -179,21 +179,14 @@ itemClicked = (item) => {
             <Paper className={this.props.classes.paper}>
               <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
               <form id="loginForm" onSubmit = {this.handleSubmit} >
-                
-                <Search
-                    defaultTitle={this.state.title}
-                    search={this.searchMovie}
-                    results={this.state.searchResults}
-                    clicked={this.itemClicked}
-                    searching={this.state.isSearching} />
+            
                 <BookSearch
                     defaultTitle={this.state.title}
                     search={this.searchBook}
                     results={this.state.searchResults}
                     clicked={this.itemClicked}
                     searching={this.state.isSearching} />
-             
-
+            
                 {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
                 <Button id="loginBtn" onClick={this.goBack} variant="contained" color="secondary" form="loginForm" className={this.props.classes.button}>GO BACK</Button>
                 <Button id="loginBtn" onClick={this.handleSubmit} variant="contained" color="primary" form="loginForm" className={this.props.classes.button}>SEARCH</Button>
@@ -254,4 +247,4 @@ const styles = theme => ({
       width: '75%',
     },
   });
-  export default withStyles(styles)(MovieSearch);
+  export default withStyles(styles)(Books);

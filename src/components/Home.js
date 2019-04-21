@@ -7,6 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import logo from '../imgs/add.png';
+import logo1 from '../imgs/addB.png';
+import logo2 from '../imgs/movie.jpg';
+
 import Search from './Search';
 import BookSearch from './BookSearch';
 
@@ -42,19 +45,23 @@ class HomeBase extends React.Component {
       title: '',
       movie: {},
       searchResults: [],
-      isSearching: false,
+      isSearching: 'false',
       popupDisplay: 'none',
+      bookDisplay: 'none',
       activeIndex: 0,
       dbMovies: [],
       userTrigs: [],
       timeCreated: '',
     };
     
-    this.onInput = this.onInput.bind(this);
   }
   
   movieSearch = () => {
     this.props.history.push('/movieSearch')
+   };
+
+   bookSearch = () => {
+    this.props.history.push('/book')
    };
 
   compTrigs = (arr) => {
@@ -70,7 +77,6 @@ class HomeBase extends React.Component {
   }
 
   componentDidMount() {
-    this.loadMovie();
     this.getUserTrigs();
     
     var that = this;
@@ -92,14 +98,43 @@ class HomeBase extends React.Component {
               </Paper>
               </div>
             </div>
-          </Grid>);
+          </Grid>
+        );
+          
           movs.push(element);
         }
       }
-      if(movs.length !=0){
-   // ReactDOM.render(movs, document.getElementById('moviePage'));
+      // ReactDOM.render(movs, document.getElementById('moviePage'));
+    });
+    this.collectBooks().then(function(value){
+      that.setState({dbMovies: value});
+      var book = [];
+      
+      for(var i = 0; i < value.length; i++){
+        if(that.compTrigs(value[i].Triggers) === false){
+          const element = (
+          <Grid item  className={that.props.classes.item} >
+            <div className={that.props.classes.movieCard} >
+            <div class="fadeIn">
+              <Paper className={that.props.classes.paper} >
+                <Typography><h1>{value[i].Name}</h1></Typography>
+                <hr color="black" width="10%"/>
+                <Typography><h3>Triggers:</h3></Typography>
+                <Typography><h4>{value[i].Triggers}</h4></Typography>
+              </Paper>
+              </div>
+            </div>
+          </Grid>
+        );
+          
+          book.push(element);
+        }
+      }
+      if(book.length !=0){
+     //ReactDOM.render(book, document.getElementById('bookPage'));
       }
     });
+    
   }
 
   getUserTrigs = () => {
@@ -125,22 +160,13 @@ class HomeBase extends React.Component {
     return snapshot.docs.map(doc => doc.data());
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.movieId !== this.state.movieId) {
-        this.loadMovie()
-    }
+  async collectBooks() {
+    const snapshot = await firebase.firestore().collection('Books').get();
+    return snapshot.docs.map(doc => doc.data());
   }
 
-  loadMovie() {
-    axios.get(`http://www.omdbapi.com/?apikey=7abe36ea&i=${this.state.movieId}`)
-        .then(response => {
-            this.setState({ movie: response.data });
-        })
-        .catch(error => {
-            console.log('Opps!', error.message);
-        })
-  }
 
+ 
 // we use a timeout to prevent the api request to fire immediately as we type
 timeout = null;
 
@@ -177,41 +203,6 @@ itemClicked = (item) => {
     )
 }
 
-  onInput(query) {
-    this.setState({
-      query
-    });
-    
-    this.searchMovie(query);
-  }
-  
-  getPopularMovies() {
-    const url = `https://api.themoviedb.org/3/movie/popular?api_key=cfe422613b250f702980a3bbf9e90716`;
-    
-    fetch (url)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          movies: data.results
-        })
-      });
-  }
-  
-  searchMovie(query) {
-    const url = `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=cfe422613b250f702980a3bbf9e90716`;
-    
-    fetch (url)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          movies: data.results
-        })
-      });
-  }
-  
-  /*componentDidMount() {
-    this.getPopularMovies();
-  }*/
 
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value })
@@ -225,7 +216,7 @@ itemClicked = (item) => {
     //add the stuff to database
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
-    db.collection('Movies').doc(this.state.title).set({
+    db.collection('Movies').doc(this.state.title).update({
       Triggers: this.state.triggers,
       Name: this.state.title,
       DateAdded: this.state.timeCreated
@@ -233,6 +224,20 @@ itemClicked = (item) => {
       this.handleClickOpen();
     }).catch({
 
+    })
+  }
+  handleBookSubmit = () => {
+    //add the stuff to database
+    var user = firebase.auth().currentUser;
+    let db = firebase.firestore();
+    db.collection('Books').doc(this.state.title).update({
+      Triggers: this.state.triggers,
+      Name: this.state.title,
+      DateAdded: this.state.timeCreated
+    }).then(() => {
+      this.handleClickOpen();
+    }).catch({
+      
     })
   }
 
@@ -260,6 +265,18 @@ itemClicked = (item) => {
   hideTrigger = () => {
     this.setState({
       popupDisplay: 'none',
+    });
+  }
+
+  sTrigger = () => {
+    this.setState({
+      bookDisplay: 'block',
+    });
+  }
+
+  hTrigger = () => {
+    this.setState({
+      bookDisplay: 'none',
     });
   }
 
@@ -299,7 +316,6 @@ itemClicked = (item) => {
       <Paper className={this.props.classes.paper} style={{display: this.state.popupDisplay}}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
-
           <div onClick={() => this.setState({ isSearching: false })} >
             <Search
               defaultTitle={this.state.title}
@@ -314,15 +330,32 @@ itemClicked = (item) => {
           </div>
         </form>
         </Paper>
+        <Paper className={this.props.classes.paper} style={{display: this.state.bookDisplay}}>
+        <img className={this.props.classes.logo} src={logo1} alt="DodgeEm"/>
+        <form id="loginForm" onSubmit = {this.handleSubmit} >
+          <div onClick={() => this.setState({ isSearching: false })} >
+            <Search
+              defaultTitle={this.state.title}
+              search={this.searchMovie}
+              results={this.state.searchResults}
+              clicked={this.itemClicked}
+              searching={this.state.isSearching} />
+            <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
+            {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
+            <Button id="submitMovieclose" onClick={this.hTrigger} variant="contained" color="secondary" className={this.props.classes.button}>CANCEL</Button>
+            <Button id="submitMovie" onClick={this.handleBookSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
+          </div>
+        </form>
+        </Paper>
       <div>
       <div className={this.props.classes.tabs}>
         {/*<div style={{ display: 'flex', backgroundColor: '#c2cad0', borderRadius: '5px', 'max-height':'800px', overflowY: 'scroll'}}>*/}
         <Grid direction="row">
         <Grid item className={this.props.classes.item}>
           <VerticalTabs value={activeIndex} onChange={this.handleTabChange}>
-            <MyTab label='Movies' style={{fontWeight:'bold'}}/>
+            <MyTab label='Movies/TV Shows' style={{fontWeight:'bold'}}/>
+            {/*<img className={this.props.classes.logo} src={logo2} alt="DodgeEm"/>*/}
             <MyTab label='Books' style={{fontWeight:'bold'}}/>
-            <MyTab label='Tv Shows' style={{fontWeight:'bold'}}/>
           </VerticalTabs>
           </Grid>
           <Grid item className={this.props.classes.item}>
@@ -332,18 +365,31 @@ itemClicked = (item) => {
           <TabContainer>
             <Grid container direction="row" className={this.props.classes.cardGrid}>
               <Grid item className={this.props.classes.item}>
-              <Button id="submitMovie" onClick={this.movieSearch} variant="contained" color="primary" className={this.props.classes.button}>Search Movie</Button>
+              <Button id="submitMovie" onClick={this.movieSearch} variant="contained" color="primary" className={this.props.classes.button}>Search Movie/TV Show</Button>
               </Grid>
               <Grid item className={this.props.classes.item}>
-                <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>
+                <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie/TV Show Trigger</Button>
               </Grid>
             </Grid>
             <Grid container id="moviePage" direction="row" className={this.props.classes.cardGrid}>
             
             </Grid>
           </TabContainer>}
-          { activeIndex === 1 && <TabContainer><BookSearch></BookSearch></TabContainer>  }
-          { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
+          { activeIndex === 1 && <TabContainer>
+            <TabContainer>
+            <Grid container direction="row" className={this.props.classes.cardGrid}>
+              <Grid item className={this.props.classes.item}>
+              <Button id="submitMovie" onClick={this.bookSearch} variant="contained" color="primary" className={this.props.classes.button}>Search Book</Button>
+              </Grid>
+              <Grid item className={this.props.classes.item}>
+                <Button id="submitMovie" onClick={this.sTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Book Trigger</Button>
+              </Grid>
+            </Grid>
+            <Grid container id="bookPage" direction="row" className={this.props.classes.cardGrid}>
+            
+            </Grid>
+          </TabContainer>
+          </TabContainer>  }
         </div>
         </Grid>
         </Grid>
