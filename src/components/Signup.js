@@ -14,6 +14,7 @@ import app from 'firebase/app';
 import firebase from 'firebase/app'
 import {Dropdown} from 'semantic-ui-react';
 import 'firebase/functions';
+import './CSSStuff.css'
 require('firebase/firestore');
 
 
@@ -219,7 +220,7 @@ class SignupBase extends React.Component {
     document.head.appendChild(styleLink);
 
     return (
-      <div className={this.props.classes.container}>
+      <div className={this.props.classes.container} class="fadeInDown">
         <Paper className={this.props.classes.paper}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
           <form id="loginForm" style={{paddingTop:'2%'}} onSubmit={this.handleSubmit}>

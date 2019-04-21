@@ -75,16 +75,19 @@ class Guest extends React.Component {
       that.setState({dbMovies: value});
       var movs = [];
       
-      for(var i = 0; i < value.length; i++){
+      for(var i = 0; i < 15; i++){
         if(that.compTrigs(value[i].Triggers) === false){
-          const element = (<Grid item className={that.props.classes.item}>
-            <div className={that.props.classes.movieCard}>
-              <Paper className={that.props.classes.paper}>
+          const element = (
+          <Grid item  className={that.props.classes.item} >
+            <div className={that.props.classes.movieCard} >
+            <div class="fadeIn">
+              <Paper className={that.props.classes.paper} >
                 <Typography><h1>{value[i].Name}</h1></Typography>
                 <hr color="black" width="10%"/>
                 <Typography><h3>Triggers:</h3></Typography>
                 <Typography><h4>{value[i].Triggers}</h4></Typography>
               </Paper>
+              </div>
             </div>
           </Grid>);
           movs.push(element);

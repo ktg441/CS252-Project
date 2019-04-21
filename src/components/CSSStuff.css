@@ -217,6 +217,11 @@
     -webkit-animation-duration:1s;
     -moz-animation-duration:1s;
     animation-duration:1s;
+    margin: 15;
+    align-content: "center";
+    display: 'block';
+    margin-left: 'auto';
+    margin-right: 'auto';
   }
   
   .fadeIn.first {

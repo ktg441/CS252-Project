@@ -8,6 +8,8 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import logo from '../imgs/add.png';
 import Search from './Search';
+import BookSearch from './BookSearch';
+
 import {Dropdown} from 'semantic-ui-react';
 import firebase from 'firebase/app';
 import Dialog from '@material-ui/core/Dialog';
@@ -21,7 +23,7 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import { Grid } from '@material-ui/core';
 import ReactDOM from 'react-dom';
-
+import "./CSSStuff.css"
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -78,20 +80,25 @@ class HomeBase extends React.Component {
       
       for(var i = 0; i < value.length; i++){
         if(that.compTrigs(value[i].Triggers) === false){
-          const element = (<Grid item className={that.props.classes.item}>
-            <div className={that.props.classes.movieCard}>
-              <Paper className={that.props.classes.paper}>
+          const element = (
+          <Grid item  className={that.props.classes.item} >
+            <div className={that.props.classes.movieCard} >
+            <div class="fadeIn">
+              <Paper className={that.props.classes.paper} >
                 <Typography><h1>{value[i].Name}</h1></Typography>
                 <hr color="black" width="10%"/>
                 <Typography><h3>Triggers:</h3></Typography>
                 <Typography><h4>{value[i].Triggers}</h4></Typography>
               </Paper>
+              </div>
             </div>
           </Grid>);
           movs.push(element);
         }
       }
-    ReactDOM.render(movs, document.getElementById('moviePage'));
+      if(movs.length !=0){
+   // ReactDOM.render(movs, document.getElementById('moviePage'));
+      }
     });
   }
 
@@ -223,7 +230,6 @@ itemClicked = (item) => {
       Name: this.state.title,
       DateAdded: this.state.timeCreated
     }).then(() => {
-      
       this.handleClickOpen();
     }).catch({
 
@@ -294,7 +300,7 @@ itemClicked = (item) => {
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
 
-          <div onClick={() => this.setState({ isSearching: false })}>
+          <div onClick={() => this.setState({ isSearching: false })} >
             <Search
               defaultTitle={this.state.title}
               search={this.searchMovie}
@@ -336,7 +342,7 @@ itemClicked = (item) => {
             
             </Grid>
           </TabContainer>}
-          { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
+          { activeIndex === 1 && <TabContainer><BookSearch></BookSearch></TabContainer>  }
           { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
         </div>
         </Grid>
