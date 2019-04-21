@@ -334,7 +334,7 @@ itemClicked = (item) => {
         <img className={this.props.classes.logo} src={logo1} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
           <div onClick={() => this.setState({ isSearching: false })} >
-            <Search
+            <BookSearch
               defaultTitle={this.state.title}
               search={this.searchMovie}
               results={this.state.searchResults}
