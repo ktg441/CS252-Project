@@ -8,11 +8,6 @@ import Search from './Search';
 import firebase from 'firebase/app';
 import axios from 'axios';
 import ReactDOM from 'react-dom';
-import Select from 'react-select';
-
-import GoodReads from 'react-goodreads';
-import { Input } from '@material-ui/core';
-
 
 class MovieSearch extends React.Component{
   constructor(props) {
@@ -30,7 +25,6 @@ class MovieSearch extends React.Component{
       isSearching: false,
       popupDisplay: 'none',
       activeIndex: 0,
-      value: ' ',
     };
     
     this.onInput = this.onInput.bind(this);
@@ -58,10 +52,29 @@ loadMovie() {
 
 // we use a timeout to prevent the api request to fire immediately as we type
 timeout = null;
+searchBook = (event) => {
+  this.setState({ title: event.target.value, isSearching: true })
+  var books = require('google-books-search');
+
+  books.search(this.state.title, function(error, results) {
+      if ( ! error ) {
+          console.log(results[1].title);
+          var bookTitle = [];
+          for(var i =0; i< 5; i ++){
+            bookTitle[i] = results[i].title
+          }
+          console.log(bookTitle[1])
+          //this.setState({ searchResults: bookTitle });
 
 
-
+      } else {
+          console.log(error);
+      }
+  });
+}
 searchMovie = (event) => {
+    this.setState({ title: event.target.value, isSearching: true })
+
     clearTimeout(this.timeout);
 
     this.timeout = setTimeout(() => {
@@ -100,7 +113,6 @@ itemClicked = (item) => {
     this.searchMovie(query);
   }
   
-
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value })
   };
@@ -111,16 +123,6 @@ itemClicked = (item) => {
 
   handleSubmit = () => {
     //add the stuff to database
-    var books = require('google-books-search');
-
-    books.search('The Hunger Games', function(error, results) {
-        if ( ! error ) {
-            console.log(results[1].title);
-        } else {
-            console.log(error);
-        }
-    });
-
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
     var that = this;
@@ -150,57 +152,50 @@ itemClicked = (item) => {
       console.log("Error getting information:", error);
   });
   }
-
-  letsTryThisOutMyDudes = (query)=>{
-    var books = require('google-books-search');
-
-    books.search(query, function(error, results) {
-        if ( ! error ) {
-            console.log(results);
-        } else {
-            console.log(error);
-        }
-    });
-                              
-  }
   handleClose = () => {
     this.setState({ open: false });
     window.location.reload();
   };
-
   handleClickOpen = () => {
     this.setState({ open: true });
   };
-
   handleTabChange = (_, activeIndex) => this.setState({ activeIndex })
-
   showTrigger = () => {
     this.setState({
       popupDisplay: 'block',
     });
   }
-
   goBack = () =>{
     this.props.history.push('/home');
   }    
-
     render() {
       const { movies, query } = this.state;
       const isSearched = query => item => !query || item.title.toLowerCase().includes(query.toLowerCase());
       const { activeIndex } = this.state;
   
         return (
-          <div className={this.props.classes.container} class="fadeInDown">
+          <div className={this.props.classes.container}>
             <Paper className={this.props.classes.paper}>
               <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
               <form id="loginForm" onSubmit = {this.handleSubmit} >
+                {/*<TextField
+                  id="movie"
+                  type="movie"
+                  required
+                  value={this.state.password}
+                  onChange={this.handleChange}
+                  label="Search for a Movie"
+                  fullWidth
+                  className={this.props.classes.field}
+                  variant="outlined"
+                />*/}
                 <Search
                     defaultTitle={this.state.title}
                     search={this.searchMovie}
                     results={this.state.searchResults}
                     clicked={this.itemClicked}
                     searching={this.state.isSearching} />
-                 <Search
+                <Search
                     defaultTitle={this.state.title}
                     search={this.searchBook}
                     results={this.state.searchResults}
@@ -211,11 +206,8 @@ itemClicked = (item) => {
                 <Button id="loginBtn" onClick={this.handleSubmit} variant="contained" color="primary" form="loginForm" className={this.props.classes.button}>SEARCH</Button>
               </form>
             </Paper>
-
             <div id="movieTrigs">
-
             </div>
-
             
             {/*<p> {this.state.title} </p>
             <p> {this.state.trigger} </p>*/}
@@ -223,7 +215,6 @@ itemClicked = (item) => {
         );
       }
 }
-
 const styles = theme => ({
     container: {
       marginTop: 80,

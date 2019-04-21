@@ -23,7 +23,7 @@ const Search = (props) => {
                     <body>
                               
                     <ListItem selected
-                     key={item.imdbID} onClick={() => props.clicked(item)}>
+                    onClick={() => props.clicked(item)}>
                         {item.Title}
                     </ListItem>
                     <br></br>
