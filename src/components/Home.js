@@ -216,7 +216,7 @@ itemClicked = (item) => {
     //add the stuff to database
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
-    db.collection('Movies').doc(this.state.title).update({
+    db.collection('Movies').doc(this.state.title).set({
       Triggers: this.state.triggers,
       Name: this.state.title,
       DateAdded: this.state.timeCreated
@@ -230,7 +230,7 @@ itemClicked = (item) => {
     //add the stuff to database
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
-    db.collection('Books').doc(this.state.title).update({
+    db.collection('Books').doc(this.state.title).set({
       Triggers: this.state.triggers,
       Name: this.state.title,
       DateAdded: this.state.timeCreated
@@ -402,7 +402,7 @@ itemClicked = (item) => {
           aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle id="alert-dialog-slide-title">
-            {"Successfully added a movie!"}
+            {"Successfully added the trigger!"}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
