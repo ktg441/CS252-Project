@@ -52,6 +52,7 @@ class HomeBase extends React.Component {
       dbMovies: [],
       userTrigs: [],
       timeCreated: '',
+      dbBooks: '',
     };
     
   }
@@ -104,37 +105,8 @@ class HomeBase extends React.Component {
           movs.push(element);
         }
       }
-      // ReactDOM.render(movs, document.getElementById('moviePage'));
-    });
-    this.collectBooks().then(function(value){
-      that.setState({dbMovies: value});
-      var book = [];
-      
-      for(var i = 0; i < value.length; i++){
-        if(that.compTrigs(value[i].Triggers) === false){
-          const element = (
-          <Grid item  className={that.props.classes.item} >
-            <div className={that.props.classes.movieCard} >
-            <div class="fadeIn">
-              <Paper className={that.props.classes.paper} >
-                <Typography><h1>{value[i].Name}</h1></Typography>
-                <hr color="black" width="10%"/>
-                <Typography><h3>Triggers:</h3></Typography>
-                <Typography><h4>{value[i].Triggers}</h4></Typography>
-              </Paper>
-              </div>
-            </div>
-          </Grid>
-        );
-          
-          book.push(element);
-        }
-      }
-      if(book.length !=0){
-     //ReactDOM.render(book, document.getElementById('bookPage'));
-      }
-    });
-    
+       ReactDOM.render(movs, document.getElementById('moviePage'));
+    });   
   }
 
   getUserTrigs = () => {
@@ -165,8 +137,35 @@ class HomeBase extends React.Component {
     return snapshot.docs.map(doc => doc.data());
   }
 
-
- 
+  getBooks = () => {
+    var that = this;
+    this.collectBooks().then(function(value){
+      that.setState({dbBooks: value});
+      var book = [];
+      
+      for(var i = 0; i < value.length; i++){
+        if(that.compTrigs(value[i].Triggers) === false){
+          const element = (
+          <Grid item  className={that.props.classes.item} >
+            <div className={that.props.classes.movieCard} >
+            <div class="fadeIn">
+              <Paper className={that.props.classes.paper} >
+                <Typography><h1>{value[i].Name}</h1></Typography>
+                <hr color="black" width="10%"/>
+                <Typography><h3>Triggers:</h3></Typography>
+                <Typography><h4>{value[i].Triggers}</h4></Typography>
+              </Paper>
+              </div>
+            </div>
+          </Grid>
+        );
+          
+          book.push(element);
+        }
+      }
+      ReactDOM.render(book, document.getElementById('bookPage'));
+    });
+  }
 // we use a timeout to prevent the api request to fire immediately as we type
 timeout = null;
 
@@ -188,9 +187,8 @@ searchMovie = (event) => {
                 console.log('Opps!', error.message);
             })
     }, 1000)
-
-
 }
+
 
 // event handler for a search result item that is clicked
 itemClicked = (item) => {
@@ -253,7 +251,11 @@ itemClicked = (item) => {
   handleTabChange = (_, activeIndex) => {
     this.setState({ activeIndex });
     //ReactDOM.render(this.state.movs1, document.getElementById('moviePage'));
-    this.componentDidMount();
+    if(activeIndex === 0){
+      this.componentDidMount();
+    }else{
+      this.getBooks();
+    }
   }
 
   showTrigger = () => {
@@ -330,6 +332,7 @@ itemClicked = (item) => {
           </div>
         </form>
         </Paper>
+        
         <Paper className={this.props.classes.paper} style={{display: this.state.bookDisplay}}>
         <img className={this.props.classes.logo} src={logo1} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
@@ -375,19 +378,17 @@ itemClicked = (item) => {
             </Grid>
           </TabContainer>}
           { activeIndex === 1 && <TabContainer>
-            <TabContainer>
             <Grid container direction="row" className={this.props.classes.cardGrid}>
               <Grid item className={this.props.classes.item}>
-              <Button id="submitMovie" onClick={this.bookSearch} variant="contained" color="primary" className={this.props.classes.button}>Search Book</Button>
+              <Button id="submitBook" onClick={this.bookSearch} variant="contained" color="primary" className={this.props.classes.button}>Search Book</Button>
               </Grid>
               <Grid item className={this.props.classes.item}>
-                <Button id="submitMovie" onClick={this.sTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Book Trigger</Button>
+                <Button id="submitBook" onClick={this.sTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Book Trigger</Button>
               </Grid>
             </Grid>
             <Grid container id="bookPage" direction="row" className={this.props.classes.cardGrid}>
             
             </Grid>
-          </TabContainer>
           </TabContainer>  }
         </div>
         </Grid>
