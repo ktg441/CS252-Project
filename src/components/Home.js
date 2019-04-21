@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import logo from '../imgs/add.png';
 import logo1 from '../imgs/addB.png';
-import logo2 from '../imgs/movie.jpg';
+import logo2 from '../imgs/mov.png';
 
 import Search from './Search';
 import BookSearch from './BookSearch';
@@ -354,7 +354,6 @@ itemClicked = (item) => {
         <Grid item className={this.props.classes.item}>
           <VerticalTabs value={activeIndex} onChange={this.handleTabChange}>
             <MyTab label='Movies/TV Shows' style={{fontWeight:'bold'}}/>
-            {/*<img className={this.props.classes.logo} src={logo2} alt="DodgeEm"/>*/}
             <MyTab label='Books' style={{fontWeight:'bold'}}/>
           </VerticalTabs>
           </Grid>
