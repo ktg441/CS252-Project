@@ -6,6 +6,6 @@
     "\\src\\components",
     "\\src\\components\\FirebaseConfig"
   ],
-  "SelectedNode": "\\public\\index.html",
+  "SelectedNode": "\\src\\components\\FirebaseConfig\\Fire.js",
   "PreviewInSolutionExplorer": false
 }
