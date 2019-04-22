@@ -13,7 +13,7 @@ const styles = theme => ({
   },
 });
 
-const Search = (props) => {
+const BookSearch = (props) => {
     let resultList = null
 
     if (props.searching && (props.defaultTitle !== '')) {
@@ -35,10 +35,10 @@ const Search = (props) => {
 
     return (
         <div className="search">
-            <TextField style={{textAlign: 'left', margin: 'auto', paddingBottom: 10, width: '75%'}} type="search" name="movie-search" value={props.defaultTitle} onChange={props.search} placeholder="Movie Title" required variant="outlined" label="Movie Title"/>
+            <TextField style={{textAlign: 'left', margin: 'auto', paddingBottom: 10, width: '75%'}} type="search" name="movie-search" value={props.defaultTitle} onChange={props.search} placeholder="Book Title" required variant="outlined" label="Book Title"/>
             {resultList}
         </div>
     );
 };
 
-export default Search
+export default BookSearch

@@ -48,6 +48,9 @@ class LandingPage extends React.Component {
             <Heading><h1>Dodge 'Em</h1></Heading>
             <h2>Be safe while watching movies, tv shows, or reading, etc</h2>
             <CallToAction id='signUpBtn' href="/signup" bg='#f28a35' color='white' style={{borderRadius: 100}} mr={3}>Be Safe</CallToAction>
+            <br></br>
+            <CallToAction id='signUpBtn' href="/guest" bg='black' color='white' style={{borderRadius: 100}} mr={3}>Try it out</CallToAction>
+
             <ScrollDownIndicator/>
             </Hero>
             <Section heading="What We Do" color="black">

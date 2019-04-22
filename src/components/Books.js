@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import logo from '../imgs/movie.png';
+import logo from '../imgs/searchb.png';
 import Search from './Search';
 import BookSearch from './BookSearch';
 
@@ -13,7 +13,7 @@ import ReactDOM from 'react-dom';
 import ListItem from '@material-ui/core/ListItem';
 
 
-class MovieSearch extends React.Component{
+class Books extends React.Component{
   constructor(props) {
     super(props);
     
@@ -34,26 +34,7 @@ class MovieSearch extends React.Component{
     this.searchBook = this.searchBook.bind(this);
 
   }
-  
-  componentDidMount() {
-    this.loadMovie()
-}
 
-componentDidUpdate(prevProps, prevState) {
-    if (prevState.movieId !== this.state.movieId) {
-        this.loadMovie()
-    }
-}
-
-loadMovie() {
-    axios.get(`http://www.omdbapi.com/?apikey=7abe36ea&i=${this.state.movieId}`)
-        .then(response => {
-            this.setState({ movie: response.data });
-        })
-        .catch(error => {
-            console.log('Opps!', error.message);
-        })
-}
 
 // we use a timeout to prevent the api request to fire immediately as we type
 timeout = null;
@@ -87,7 +68,7 @@ searchMovie = (event) => {
     clearTimeout(this.timeout);
 
     this.timeout = setTimeout(() => {
-        axios.get(`https://www.omdbapi.com/?apikey=7abe36ea&s=${this.state.title}`)
+        axios.get(`http://www.omdbapi.com/?apikey=7abe36ea&s=${this.state.title}`)
             .then(response => {
 
                 if (response.data.Search) {
@@ -107,9 +88,7 @@ searchMovie = (event) => {
 itemClicked = (item) => {
     this.setState(
         {
-            movieId: item.imdbID,
-            isSearching: false,
-            title: item.Title,
+            title: item
         }
     )
 }
@@ -127,27 +106,29 @@ itemClicked = (item) => {
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
     var that = this;
-    db.collection('Movies').doc(that.state.title).get().then(function(doc) {
+    var title = that.state.title;
+    //console.log(this.state.title);
+    db.collection('Books').doc(title).get().then(function(doc) {
       if(doc.exists){
-          that.setState({trigger: doc.data().Triggers});
-          console.log("Triggers: ", doc.data().Triggers);
+          that.setState({triggers: doc.data().Triggers});
+          //console.log("Triggers: ", doc.data().Triggers);
 
-        const moviePage = (<Paper className={that.props.classes.paper}>
+        const bookPage = (<Paper className={that.props.classes.paper}>
           <Typography><h1>{that.state.title}</h1></Typography>
           <hr color="black" width="10%"/>
           <Typography><h3>Triggers:</h3></Typography>
-          <Typography><h4>{that.state.trigger}</h4></Typography>
+          <Typography><h4>{that.state.triggers}</h4></Typography>
           </Paper>);
-          ReactDOM.render(moviePage, document.getElementById('movieTrigs'));
+          ReactDOM.render(bookPage, document.getElementById('bookTrigs'));
       }
       else {
           const moviePage = (<Paper className={that.props.classes.paper}>
             <Typography><h1>{that.state.title}</h1></Typography>
             <hr color="black" width="10%"/>
             <Typography><h3>Triggers:</h3></Typography>
-            <Typography><h4>Currently don't have data on this movie.</h4></Typography>
+            <Typography><h4>Currently don't have data on this book.</h4></Typography>
             </Paper>);
-            ReactDOM.render(moviePage, document.getElementById('movieTrigs'));
+            ReactDOM.render(moviePage, document.getElementById('bookTrigs'));
       }
   }).catch(function(error) {
       console.log("Error getting information:", error);
@@ -179,20 +160,20 @@ itemClicked = (item) => {
             <Paper className={this.props.classes.paper}>
               <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
               <form id="loginForm" onSubmit = {this.handleSubmit} >
-                
-                <Search
+            
+                <BookSearch
                     defaultTitle={this.state.title}
-                    search={this.searchMovie}
+                    search={this.searchBook}
                     results={this.state.searchResults}
                     clicked={this.itemClicked}
                     searching={this.state.isSearching} />
-
+            
                 {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
                 <Button id="loginBtn" onClick={this.goBack} variant="contained" color="secondary" form="loginForm" className={this.props.classes.button}>GO BACK</Button>
                 <Button id="loginBtn" onClick={this.handleSubmit} variant="contained" color="primary" form="loginForm" className={this.props.classes.button}>SEARCH</Button>
               </form>
             </Paper>
-            <div id="movieTrigs">
+            <div id="bookTrigs">
             </div>
             
             {/*<p> {this.state.title} </p>
@@ -247,4 +228,4 @@ const styles = theme => ({
       width: '75%',
     },
   });
-  export default withStyles(styles)(MovieSearch);
+  export default withStyles(styles)(Books);

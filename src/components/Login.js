@@ -16,6 +16,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import firebase from 'firebase/app';
+import "./CSSStuff.css"
 
 const styles = theme => ({
   container: {
@@ -207,10 +208,10 @@ class LoginBase extends React.Component {
 
   render() {
     return (
-      <div className={this.props.classes.container}>
-        <Paper className={this.props.classes.paper}>
+      <div className={this.props.classes.container} class="fadeInDown">
+        <Paper className={this.props.classes.paper} >
           <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
-          <form id="loginForm" onSubmit = {this.handleLogin} >
+          <form id="loginForm" onSubmit = {this.handleLogin}  >
             <TextField
               id="username"
               type="username"
@@ -294,22 +295,9 @@ class LoginBase extends React.Component {
                 required
                 value={this.state.ans1}
                 onChange={this.handleChange}
-                label="Answer 1"
+                label="Answer"
                 fullWidth
                 />
-
-              <DialogContentText id="alert-dialog-description" style={{ paddingBottom: "2%" }}>
-                <Typography><h2>{this.state.quest2}</h2></Typography>
-              </DialogContentText>
-                <TextField
-                  id="ans2"
-                  type="answer"
-                  required
-                  value={this.state.ans2}
-                  onChange={this.handleChange}
-                  label="Answer 2"
-                  fullWidth
-                  />
                 {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
               </DialogContent>
               <DialogActions>

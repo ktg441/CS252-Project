@@ -32,7 +32,7 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-class HomeBase extends React.Component {
+class Guest extends React.Component {
   constructor(props) {
     super(props);
     
@@ -103,7 +103,7 @@ class HomeBase extends React.Component {
   }
 
   componentDidMount() {
-    this.getUserTrigs();
+    //this.getUserTrigs();
     
     var that = this;
     this.collectMovies().then(function(value){
@@ -458,10 +458,10 @@ itemClick = (item) => {
     );
   }
 }
-const Home = compose(
+const Guests = compose(
   withRouter,
   //withFirebase,
-)(HomeBase);
+)(Guest);
 const styles = theme => ({
   movieCard:{
     position: 'auto',
@@ -569,4 +569,4 @@ function TabContainer(props) {
   );
 }
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(Guest);

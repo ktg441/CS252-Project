@@ -14,6 +14,7 @@ import app from 'firebase/app';
 import firebase from 'firebase/app'
 import {Dropdown} from 'semantic-ui-react';
 import 'firebase/functions';
+import './CSSStuff.css'
 require('firebase/firestore');
 
 
@@ -224,7 +225,7 @@ class SignupBase extends React.Component {
     document.head.appendChild(styleLink);
 
     return (
-      <div className={this.props.classes.container}>
+      <div className={this.props.classes.container} class="fadeInDown">
         <Paper className={this.props.classes.paper}>
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
           <form id="loginForm" style={{paddingTop:'2%'}} onSubmit={this.handleSubmit}>
@@ -276,11 +277,9 @@ class SignupBase extends React.Component {
               className={this.props.classes.field}
               variant="outlined"
             />
-            <Dropdown id="quest1" style={{width:"75%", margin: 'auto'}} placeholder='Security Question 1' fluid selection options={secQuests} onChange={this.handleSingle1Change}/>
-            <TextField id="ans1" type="ans1" required value={this.state.ans1} onChange={this.handleChange} label="First Answer" fullWidth className={this.props.classes.field} variant="outlined"/>
-            <Dropdown id="quest2" style={{width:"75%", margin: 'auto'}} placeholder='Security Question 2' fluid selection options={SecQuests2} onChange={this.handleSingle2Change}/>
-            <TextField id="ans2" type="ans2" required value={this.state.ans2} onChange={this.handleChange} label="Second Answer" fullWidth className={this.props.classes.field} variant="outlined"/>
-
+            <Dropdown id="quest1" style={{width:"75%", margin: 'auto'}} placeholder='Security Question' fluid selection options={secQuests} onChange={this.handleSingle1Change}/>
+            <TextField id="ans1" type="ans1" required value={this.state.ans1} onChange={this.handleChange} label="Answer" fullWidth className={this.props.classes.field} variant="outlined"/>
+           
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
           </form>
           {<Typography className={this.props.classes.error}>{this.state.missingText}</Typography>}
