@@ -8,7 +8,7 @@ import 'firebase/functions';
 import { withRouter } from 'react-router-dom';
 //import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField/';
-//import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 //import logo from '../imgs/add.png';
 import profilepic from '../imgs/Fav.png';
@@ -165,6 +165,16 @@ class ProfileBase extends React.Component {
     }
   }
 
+  handleDelete = () => {
+    var that = this;
+    var user = firebase.auth().currentUser;
+    user.delete().then(function(){
+        that.props.push('/');
+    }).catch(function(error){
+        console.error(error);
+    })
+  }
+
   renderTextField = () => {
     //var that = this;
     if (this.state.mode !== 'edit'){
@@ -173,7 +183,11 @@ class ProfileBase extends React.Component {
         );
     }
     return (
-      <p>About Me: <TextField type='text' defaultValue={this.state.about} id='bio'></TextField></p>
+      <div>
+          <p>About Me: <TextField type='text' defaultValue={this.state.about} id='bio'></TextField></p>
+          <br></br>
+          <Button id="deleteAcc" onClick={this.handleDelete} variant="contained" color="primary" className={this.props.classes.button}>Delete Account</Button>
+      </div>
     );
   }
 
