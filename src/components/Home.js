@@ -65,6 +65,31 @@ class HomeBase extends React.Component {
     this.props.history.push('/book')
    };
 
+   searchBook = (event) => {
+    var that = this
+    this.setState({ title: event.target.value, isSearching: true })
+    var books = require('google-books-search');
+  
+    books.search(this.state.title, function(error, results) {
+        if ( ! error ) {
+            console.log(results[1].title);
+            var bookTitle = [];
+            for(var i =0; i< 5; i ++){
+              bookTitle[i] = results[i].title
+            }
+            for(var i =0; i< 5; i ++){
+              console.log(bookTitle[i]);
+            }
+            
+            that.setState({ searchResults: bookTitle });
+            console.log(bookTitle.length)
+  
+        } else {
+            console.log(error);
+        }
+    });
+  }
+
   compTrigs = (arr) => {
     var trigs = this.state.userTrigs;
     for(var i = 0; i < trigs.length; i++){
@@ -339,7 +364,7 @@ itemClicked = (item) => {
           <div onClick={() => this.setState({ isSearching: false })} >
             <BookSearch
               defaultTitle={this.state.title}
-              search={this.searchMovie}
+              search={this.searchBook}
               results={this.state.searchResults}
               clicked={this.itemClicked}
               searching={this.state.isSearching} />
