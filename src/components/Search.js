@@ -24,7 +24,7 @@ const Search = (props) => {
                               
                     <ListItem selected
                     onClick={() => props.clicked(item)}>
-                        {item.Title}
+                        {item}
                     </ListItem>
                     <br></br>
                     </body>
