@@ -274,11 +274,9 @@ class SignupBase extends React.Component {
               className={this.props.classes.field}
               variant="outlined"
             />
-            <Dropdown id="quest1" style={{width:"75%", margin: 'auto'}} placeholder='Security Question 1' fluid selection options={secQuests} onChange={this.handleSingle1Change}/>
-            <TextField id="ans1" type="ans1" required value={this.state.ans1} onChange={this.handleChange} label="First Answer" fullWidth className={this.props.classes.field} variant="outlined"/>
-            <Dropdown id="quest2" style={{width:"75%", margin: 'auto'}} placeholder='Security Question 2' fluid selection options={SecQuests2} onChange={this.handleSingle2Change}/>
-            <TextField id="ans2" type="ans2" required value={this.state.ans2} onChange={this.handleChange} label="Second Answer" fullWidth className={this.props.classes.field} variant="outlined"/>
-
+            <Dropdown id="quest1" style={{width:"75%", margin: 'auto'}} placeholder='Security Question' fluid selection options={secQuests} onChange={this.handleSingle1Change}/>
+            <TextField id="ans1" type="ans1" required value={this.state.ans1} onChange={this.handleChange} label="Answer" fullWidth className={this.props.classes.field} variant="outlined"/>
+           
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
           </form>
           {<Typography className={this.props.classes.error}>{this.state.missingText}</Typography>}

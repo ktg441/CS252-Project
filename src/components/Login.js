@@ -295,22 +295,9 @@ class LoginBase extends React.Component {
                 required
                 value={this.state.ans1}
                 onChange={this.handleChange}
-                label="Answer 1"
+                label="Answer"
                 fullWidth
                 />
-
-              <DialogContentText id="alert-dialog-description" style={{ paddingBottom: "2%" }}>
-                <Typography><h2>{this.state.quest2}</h2></Typography>
-              </DialogContentText>
-                <TextField
-                  id="ans2"
-                  type="answer"
-                  required
-                  value={this.state.ans2}
-                  onChange={this.handleChange}
-                  label="Answer 2"
-                  fullWidth
-                  />
                 {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
               </DialogContent>
               <DialogActions>
