@@ -103,6 +103,7 @@ class HomeBase extends React.Component {
   }
 
   componentDidMount() {
+    //this.getUserTrigs();
     
     var that = this;
     this.collectMovies().then(function(value){
@@ -195,7 +196,7 @@ timeout = null;
 
 searchMovie = (event) => {
     this.setState({ title: event.target.value, isSearching: true })
-
+    var that = this;
     clearTimeout(this.timeout);
 
     this.timeout = setTimeout(() => {
@@ -204,7 +205,11 @@ searchMovie = (event) => {
 
                 if (response.data.Search) {
                     const movies = response.data.Search.slice(0, 5);
-                    this.setState({ searchResults: movies });
+                    var movie=[];
+                    for( var i =0; i< 5; i++){
+                      movie[i] = movies[i].Title
+                    }
+                    that.setState({ searchResults: movie });
                 }
             })
             .catch(error => {
@@ -218,11 +223,16 @@ searchMovie = (event) => {
 itemClicked = (item) => {
     this.setState(
         {
-            movieId: item.imdbID,
-            isSearching: false,
-            title: item.Title,
+            title: item
         }
     )
+}
+itemClick = (item) => {
+  this.setState(
+      {
+          title: item
+      }
+  )
 }
 
 
@@ -343,12 +353,13 @@ itemClicked = (item) => {
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
           <div onClick={() => this.setState({ isSearching: false })} >
-            <Search
-              defaultTitle={this.state.title}
-              search={this.searchMovie}
-              results={this.state.searchResults}
-              clicked={this.itemClicked}
-              searching={this.state.isSearching} />
+          <Search
+                    defaultTitle={this.state.title}
+                    search={this.searchMovie}
+                    results={this.state.searchResults}
+                    clicked={this.itemClicked}
+                    searching={this.state.isSearching} />
+
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
             {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
             <Button id="submitMovieclose" onClick={this.hideTrigger} variant="contained" color="secondary" className={this.props.classes.button}>CANCEL</Button>
@@ -359,14 +370,16 @@ itemClicked = (item) => {
         
         <Paper className={this.props.classes.paper} style={{display: this.state.bookDisplay}}>
         <img className={this.props.classes.logo} src={logo1} alt="DodgeEm"/>
-        <form id="loginForm" onSubmit = {this.handleSubmit} >
+        <form id="login" onSubmit = {this.handleBookSubmit} >
           <div onClick={() => this.setState({ isSearching: false })} >
+          
             <BookSearch
               defaultTitle={this.state.title}
               search={this.searchBook}
               results={this.state.searchResults}
-              clicked={this.itemClicked}
+              clicked={this.itemClick}
               searching={this.state.isSearching} />
+          
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
             {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
             <Button id="submitMovieclose" onClick={this.hTrigger} variant="contained" color="secondary" className={this.props.classes.button}>CANCEL</Button>
