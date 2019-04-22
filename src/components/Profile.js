@@ -32,7 +32,6 @@ class ProfileBase extends React.Component {
       multiTriggers: [],
       favMovs: [],
       favBooks: [],
-      favTV: [],
     };
     
     this.getUserInfo = this.getUserInfo.bind(this);    
@@ -60,10 +59,8 @@ class ProfileBase extends React.Component {
             that.setState({triggers: doc.data().Triggers});
             that.setState({about: doc.data().AboutMe});
             that.setState({picURL: doc.data().PicURL});
-            that.setState({favMovs: doc.data().favMovs});
-            that.setState({favBooks: doc.data().favBooks});
-            that.setState({favTV: doc.data().favTV});
-        }
+            that.setState({favMovs: doc.data().FavMovies});
+            that.setState({favBooks: doc.data().favBooks});        }
         else {
             console.log("No info found!");
         }
@@ -238,27 +235,6 @@ class ProfileBase extends React.Component {
     }
   }
 
-  renderTV(){
-    var that = this;
-    var tv = that.state.favTV;
-    if(tv === undefined){
-        return(
-            <p>You have no favorite TV shows!</p>
-        );
-    }
-    else{
-        return (
-            <div>
-                {tv.map(function (n) {
-                    return ([
-                        <p key = {n}>{n}</p>
-                    ])
-                })}
-            </div>
-        );
-    }
-  }
-
   render() {
 
     const styleLink = document.createElement("link");
@@ -281,11 +257,11 @@ class ProfileBase extends React.Component {
                     </div>
                 </Paper>
                 <Paper className={this.props.classes.paperQuarterBottom}>
-                    <h2>Trigger List</h2>
+                    <h1>Trigger List</h1>
                     {this.populateTriggers()}
                 </Paper>
                 <Paper className={this.props.classes.paperHalf}>
-                    <h2>Favorite Media</h2>
+                    <h1>Favorite Media</h1>
                     <div className={this.props.classes.mediabox}>
                         <label className={this.props.classes.mediatype}>Movies</label>
                         <br></br>
@@ -296,12 +272,6 @@ class ProfileBase extends React.Component {
                         <label className={this.props.classes.mediatype}>Books</label>
                         <br></br>
                         {this.renderBooks()}
-                    </div>
-                    <br></br>
-                    <div className={this.props.classes.mediabox}>
-                        <label className={this.props.classes.mediatype}>TV Shows</label>
-                        <br></br>
-                        {this.renderTV()}
                     </div>
                 </Paper>
             </div>
@@ -340,6 +310,7 @@ const styles = theme => ({
   },
   mediabox: {
     'text-align': 'left',
+    height: '50%',
   },
   mediatype: {
     'font-weight': 'bold',
