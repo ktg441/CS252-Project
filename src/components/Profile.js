@@ -30,6 +30,9 @@ class ProfileBase extends React.Component {
       about: '',
       picURL: '',
       multiTriggers: [],
+      favMovs: [],
+      favBooks: [],
+      favTV: [],
     };
     
     this.getUserInfo = this.getUserInfo.bind(this);    
@@ -57,7 +60,9 @@ class ProfileBase extends React.Component {
             that.setState({triggers: doc.data().Triggers});
             that.setState({about: doc.data().AboutMe});
             that.setState({picURL: doc.data().PicURL});
-            //console.log("Email: ", that.state.doc.data().Email);
+            that.setState({favMovs: doc.data().favMovs});
+            that.setState({favBooks: doc.data().favBooks});
+            that.setState({favTV: doc.data().favTV});
         }
         else {
             console.log("No info found!");
@@ -84,7 +89,7 @@ class ProfileBase extends React.Component {
 
     this.setState({about: amb.value});
     this.setState({triggers: that.state.multiTriggers});
-    this.setState({multiTriggers: []});
+    //this.setState({multiTriggers: []});
 
     if(this.state.mode === 'edit')
         this.setState({mode: 'view'});
@@ -191,6 +196,69 @@ class ProfileBase extends React.Component {
     );
   }
 
+  renderMovs(){
+    var that = this;
+    var movies = that.state.favMovs;
+    if(movies === undefined){
+        return(
+            <p>You have no favorite movies!</p>
+        );
+    }
+    else{
+        return (
+            <div>
+                {movies.map(function (n) {
+                    return ([
+                        <p key = {n}>{n}</p>
+                    ])
+                })}
+            </div>
+        );
+    }
+  }
+
+  renderBooks(){
+    var that = this;
+    var books = that.state.favBooks;
+    if(books === undefined){
+        return(
+            <p>You have no favorite books!</p>
+        );
+    }
+    else{
+        return (
+            <div>
+                {books.map(function (n) {
+                    return ([
+                        <p key = {n}>{n}</p>
+                    ])
+                })}
+            </div>
+        );
+    }
+  }
+
+  renderTV(){
+    var that = this;
+    var tv = that.state.favTV;
+    if(tv === undefined){
+        return(
+            <p>You have no favorite TV shows!</p>
+        );
+    }
+    else{
+        return (
+            <div>
+                {tv.map(function (n) {
+                    return ([
+                        <p key = {n}>{n}</p>
+                    ])
+                })}
+            </div>
+        );
+    }
+  }
+
   render() {
 
     const styleLink = document.createElement("link");
@@ -221,17 +289,19 @@ class ProfileBase extends React.Component {
                     <div className={this.props.classes.mediabox}>
                         <label className={this.props.classes.mediatype}>Movies</label>
                         <br></br>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
+                        {this.renderMovs()}
                     </div>
+                    <br></br>
                     <div className={this.props.classes.mediabox}>
                         <label className={this.props.classes.mediatype}>Books</label>
                         <br></br>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
+                        {this.renderBooks()}
                     </div>
+                    <br></br>
                     <div className={this.props.classes.mediabox}>
                         <label className={this.props.classes.mediatype}>TV Shows</label>
                         <br></br>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
+                        {this.renderTV()}
                     </div>
                 </Paper>
             </div>
