@@ -225,6 +225,13 @@ itemClicked = (item) => {
         }
     )
 }
+itemClick = (item) => {
+  this.setState(
+      {
+          title: item
+      }
+  )
+}
 
 
   handleChange = event => {
@@ -366,7 +373,7 @@ itemClicked = (item) => {
               defaultTitle={this.state.title}
               search={this.searchBook}
               results={this.state.searchResults}
-              clicked={this.itemClicked}
+              clicked={this.itemClick}
               searching={this.state.isSearching} />
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
             {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}

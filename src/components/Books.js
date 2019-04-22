@@ -88,9 +88,7 @@ searchMovie = (event) => {
 itemClicked = (item) => {
     this.setState(
         {
-            movieId: item.imdbID,
-            isSearching: false,
-            title: item.Title,
+            title: item
         }
     )
 }
