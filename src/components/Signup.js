@@ -151,6 +151,8 @@ class SignupBase extends React.Component {
                 Ans1: that.state.ans1encr,
                 SecQuest2: that.state.quest2,
                 Ans2: that.state.ans2encr,
+                AboutMe: 'I am a wonderful human being!',
+                PicURL: 'https://firebasestorage.googleapis.com/v0/b/dodgeem-43d2c.appspot.com/o/images%2FFav.png?alt=media&token=62472fd8-dfbd-4955-8233-d00fcaf657f1',
               }).then(function (){
                 console.log("WE DID IT");
               }).catch(function(error){
