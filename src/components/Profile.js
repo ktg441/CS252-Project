@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { compose } from 'recompose';
+import {Dropdown} from 'semantic-ui-react';
 //import { withFirebase } from './Firebase';
 import firebase from 'firebase/app';
 import 'firebase/functions';
@@ -11,7 +12,8 @@ import TextField from '@material-ui/core/TextField/';
 import Paper from '@material-ui/core/Paper';
 //import logo from '../imgs/add.png';
 import profilepic from '../imgs/Fav.png';
-import { auth } from './FirebaseConfig/Fire'
+import { auth } from './FirebaseConfig/Fire';
+import { storage } from './FirebaseConfig/Fire';
 import PropTypes from 'prop-types';
 require('firebase/firestore');
 
@@ -26,6 +28,8 @@ class ProfileBase extends React.Component {
       mode: 'view',
       potentialText: '',
       about: '',
+      picURL: '',
+      multiTriggers: [],
     };
     
     this.getUserInfo = this.getUserInfo.bind(this);    
@@ -35,6 +39,13 @@ class ProfileBase extends React.Component {
   }
 
   getUserInfo = () => {
+    //var storage = {storage};
+    /*var storage = firebase.storage();
+    var ref = storage.refFromURL('gs://dodgeem-43d2c.appspot.com/images/Fav.png');
+    console.log(ref);
+    var url = ref.getDownloadURL();
+    console.log("url " + url); */
+
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
     var that = this;
@@ -45,6 +56,7 @@ class ProfileBase extends React.Component {
             that.setState({name: doc.data().Username});
             that.setState({triggers: doc.data().Triggers});
             that.setState({about: doc.data().AboutMe});
+            that.setState({picURL: doc.data().PicURL});
             //console.log("Email: ", that.state.doc.data().Email);
         }
         else {
@@ -61,14 +73,18 @@ class ProfileBase extends React.Component {
 
   changeCheckMode = () => {
     var amb = document.getElementById('bio');
+    var drop = document.getElementById('droptrigs');
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
     var that = this;
     db.collection('users').doc(user.uid).update({
         AboutMe: amb.value,
+        Triggers: that.state.multiTriggers,
     })
 
     this.setState({about: amb.value});
+    this.setState({triggers: that.state.multiTriggers});
+    //this.setState({multiTriggers: []});
 
     if(this.state.mode === 'edit')
         this.setState({mode: 'view'});
@@ -104,6 +120,51 @@ class ProfileBase extends React.Component {
     }
   }
 
+  handleMultiChange = (event, {value}) => {
+      this.setState({ multiTriggers: value });
+  }
+
+  populateTriggers() {
+    var that = this;
+    const options = [
+      {key: 'Anime ', text: 'Anime ', value: 'Anime '},
+      {key: 'Shootings ', text: 'Shootings ', value: 'Shootings '},
+      {key: 'Blood ', text: 'Blood ', value: 'Blood '},
+      {key: 'Rape ', text: 'Rape ', value: 'Rape '},
+      {key: 'War ', text: 'War ', value: 'War '},
+      {key: 'Gang Violence ', text: 'Gang Violence ', value: 'Gang Violence '},
+      {key: 'Suicide ', text: 'Suicide ', value: 'Suicide '},
+      {key: 'Sharks ', text: 'Sharks ', value: 'Sharks '},
+      {key: 'Ghosts ', text: 'Ghosts ', value: 'Ghosts '},
+      {key: 'Spiders ', text: 'Spiders ', value: 'Spiders '},
+      {key: 'Snakes ', text: 'Snakes ', value: 'Snakes '},
+      {key: 'Dogs ', text: 'Dogs ', value: 'Dogs '},
+      {key: 'Battery ', text: 'Battery ', value: 'Battery '},
+      {key: 'Drugs ', text: 'Drugs ', value: 'Drugs '},
+      {key: 'Flashing Lights ', text: 'Flashing Lights ', value: 'Flashing Lights '},
+      {key: 'Kidnap ', text: 'Kidnap ', value: 'Kidnap '},
+      {key: 'Sexual Assault ', text: 'Sexual Assault ', value: 'Sexual Assault '},
+    ];
+
+    if (that.state.mode === 'edit'){
+        return (
+            <Dropdown id = 'droptrigs' style={{width:"75%", margin: 'auto'}} placeholder="Triggers"  defaultValue = {that.state.triggers} fluid multiple selection options={options} onChange={this.handleMultiChange}/>
+        );
+    }
+    else {
+        var trigHTML = that.state.triggers;
+        return (
+            <div>
+                {trigHTML.map(function (n) {
+                    return ([
+                        <p key = {n}>{n}</p>
+                    ])
+                })}
+            </div>
+        );
+    }
+  }
+
   renderTextField = () => {
     //var that = this;
     if (this.state.mode !== 'edit'){
@@ -112,11 +173,16 @@ class ProfileBase extends React.Component {
         );
     }
     return (
-      <p>About Me: <TextField type='text' id='bio'></TextField></p>
+      <p>About Me: <TextField type='text' defaultValue={this.state.about} id='bio'></TextField></p>
     );
   }
 
   render() {
+
+    const styleLink = document.createElement("link");
+    styleLink.rel = "stylesheet";
+    styleLink.href = "https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css";
+    document.head.appendChild(styleLink);
 
     return (
         <div>
@@ -124,7 +190,7 @@ class ProfileBase extends React.Component {
             <div className={this.props.classes.container}>
                 <Paper className={this.props.classes.paperQuarterTop}>
                     <div className={this.props.classes.imgbox}>
-                        <img className={this.props.classes.profileimage} src={profilepic} alt="ProfilePic"/>
+                        <img className={this.props.classes.profileimage} src={this.state.picURL} alt="ProfilePic"/>
                     </div>
                     <div className={this.props.classes.info}>
                         <h1>{this.state.name}</h1>
@@ -134,9 +200,7 @@ class ProfileBase extends React.Component {
                 </Paper>
                 <Paper className={this.props.classes.paperQuarterBottom}>
                     <h2>Trigger List</h2>
-                    <p>Trigger 1</p>
-                    <p>Trigger 2</p>
-                    <p>Trigger 3</p>
+                    {this.populateTriggers()}
                 </Paper>
                 <Paper className={this.props.classes.paperHalf}>
                     <h2>Favorite Media</h2>

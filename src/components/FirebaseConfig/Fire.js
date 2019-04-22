@@ -21,5 +21,5 @@ export const googleProvider = new firebase.auth.GoogleAuthProvider()
 //configure database
 const db = firebase.database(app)
 const base  = Rebase.createClass(db)
-
+export const storage = firebase.storage()
 export default base
