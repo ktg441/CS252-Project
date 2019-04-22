@@ -7,7 +7,12 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import logo from '../imgs/add.png';
+import logo1 from '../imgs/addB.png';
+import logo2 from '../imgs/mov.png';
+
 import Search from './Search';
+import BookSearch from './BookSearch';
+
 import {Dropdown} from 'semantic-ui-react';
 import firebase from 'firebase/app';
 import Dialog from '@material-ui/core/Dialog';
@@ -23,12 +28,11 @@ import { Grid } from '@material-ui/core';
 import ReactDOM from 'react-dom';
 import "./CSSStuff.css"
 
-
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-class Guest extends React.Component {
+class HomeBase extends React.Component {
   constructor(props) {
     super(props);
     
@@ -41,20 +45,50 @@ class Guest extends React.Component {
       title: '',
       movie: {},
       searchResults: [],
-      isSearching: false,
+      isSearching: 'false',
       popupDisplay: 'none',
+      bookDisplay: 'none',
       activeIndex: 0,
       dbMovies: [],
       userTrigs: [],
       timeCreated: '',
+      dbBooks: '',
     };
     
-    this.onInput = this.onInput.bind(this);
   }
   
   movieSearch = () => {
     this.props.history.push('/movieSearch')
    };
+
+   bookSearch = () => {
+    this.props.history.push('/book')
+   };
+
+   searchBook = (event) => {
+    var that = this
+    this.setState({ title: event.target.value, isSearching: true })
+    var books = require('google-books-search');
+  
+    books.search(this.state.title, function(error, results) {
+        if ( ! error ) {
+            console.log(results[1].title);
+            var bookTitle = [];
+            for(var i =0; i< 5; i ++){
+              bookTitle[i] = results[i].title
+            }
+            for(var i =0; i< 5; i ++){
+              console.log(bookTitle[i]);
+            }
+            
+            that.setState({ searchResults: bookTitle });
+            console.log(bookTitle.length)
+  
+        } else {
+            console.log(error);
+        }
+    });
+  }
 
   compTrigs = (arr) => {
     var trigs = this.state.userTrigs;
@@ -69,13 +103,13 @@ class Guest extends React.Component {
   }
 
   componentDidMount() {
-    this.loadMovie();    
+    
     var that = this;
     this.collectMovies().then(function(value){
       that.setState({dbMovies: value});
       var movs = [];
       
-      for(var i = 0; i < 15; i++){
+      for(var i = 0; i < value.length; i++){
         if(that.compTrigs(value[i].Triggers) === false){
           const element = (
           <Grid item  className={that.props.classes.item} >
@@ -89,37 +123,73 @@ class Guest extends React.Component {
               </Paper>
               </div>
             </div>
-          </Grid>);
+          </Grid>
+        );
+          
           movs.push(element);
         }
       }
-    ReactDOM.render(movs, document.getElementById('moviePage'));
-    });
+       ReactDOM.render(movs, document.getElementById('moviePage'));
+    });   
   }
 
-  
+  getUserTrigs = () => {
+    var user = firebase.auth().currentUser;
+    let db = firebase.firestore();
+    var that = this;
+    db.collection('users').doc(user.uid).get().then(function(doc) {
+        if(doc.exists){
+            that.setState({userTrigs: doc.data().Triggers});
+            that.setState({timeCreated: firebase.firestore.FieldValue.serverTimestamp()
+            })
+        }
+        else {
+            console.log("No info found!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting information:", error);
+    });
+  }
 
   async collectMovies() {
     const snapshot = await firebase.firestore().collection('Movies').get();
     return snapshot.docs.map(doc => doc.data());
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.movieId !== this.state.movieId) {
-        this.loadMovie()
-    }
+  async collectBooks() {
+    const snapshot = await firebase.firestore().collection('Books').get();
+    return snapshot.docs.map(doc => doc.data());
   }
 
-  loadMovie() {
-    axios.get(`http://www.omdbapi.com/?apikey=7abe36ea&i=${this.state.movieId}`)
-        .then(response => {
-            this.setState({ movie: response.data });
-        })
-        .catch(error => {
-            console.log('Opps!', error.message);
-        })
+  getBooks = () => {
+    var that = this;
+    this.collectBooks().then(function(value){
+      that.setState({dbBooks: value});
+      var book = [];
+      
+      for(var i = 0; i < value.length; i++){
+        if(that.compTrigs(value[i].Triggers) === false){
+          const element = (
+          <Grid item  className={that.props.classes.item} >
+            <div className={that.props.classes.movieCard} >
+            <div class="fadeIn">
+              <Paper className={that.props.classes.paper} >
+                <Typography><h1>{value[i].Name}</h1></Typography>
+                <hr color="black" width="10%"/>
+                <Typography><h3>Triggers:</h3></Typography>
+                <Typography><h4>{value[i].Triggers}</h4></Typography>
+              </Paper>
+              </div>
+            </div>
+          </Grid>
+        );
+          
+          book.push(element);
+        }
+      }
+      ReactDOM.render(book, document.getElementById('bookPage'));
+    });
   }
-
 // we use a timeout to prevent the api request to fire immediately as we type
 timeout = null;
 
@@ -141,9 +211,8 @@ searchMovie = (event) => {
                 console.log('Opps!', error.message);
             })
     }, 1000)
-
-
 }
+
 
 // event handler for a search result item that is clicked
 itemClicked = (item) => {
@@ -156,41 +225,6 @@ itemClicked = (item) => {
     )
 }
 
-  onInput(query) {
-    this.setState({
-      query
-    });
-    
-    this.searchMovie(query);
-  }
-  
-  getPopularMovies() {
-    const url = `https://api.themoviedb.org/3/movie/popular?api_key=cfe422613b250f702980a3bbf9e90716`;
-    
-    fetch (url)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          movies: data.results
-        })
-      });
-  }
-  
-  searchMovie(query) {
-    const url = `https://api.themoviedb.org/3/search/movie?query=${query}&api_key=cfe422613b250f702980a3bbf9e90716`;
-    
-    fetch (url)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          movies: data.results
-        })
-      });
-  }
-  
-  /*componentDidMount() {
-    this.getPopularMovies();
-  }*/
 
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value })
@@ -209,10 +243,23 @@ itemClicked = (item) => {
       Name: this.state.title,
       DateAdded: this.state.timeCreated
     }).then(() => {
-      
       this.handleClickOpen();
     }).catch({
 
+    })
+  }
+  handleBookSubmit = () => {
+    //add the stuff to database
+    var user = firebase.auth().currentUser;
+    let db = firebase.firestore();
+    db.collection('Books').doc(this.state.title).set({
+      Triggers: this.state.triggers,
+      Name: this.state.title,
+      DateAdded: this.state.timeCreated
+    }).then(() => {
+      this.handleClickOpen();
+    }).catch({
+      
     })
   }
 
@@ -228,7 +275,11 @@ itemClicked = (item) => {
   handleTabChange = (_, activeIndex) => {
     this.setState({ activeIndex });
     //ReactDOM.render(this.state.movs1, document.getElementById('moviePage'));
-    this.componentDidMount();
+    if(activeIndex === 0){
+      this.componentDidMount();
+    }else{
+      this.getBooks();
+    }
   }
 
   showTrigger = () => {
@@ -240,6 +291,18 @@ itemClicked = (item) => {
   hideTrigger = () => {
     this.setState({
       popupDisplay: 'none',
+    });
+  }
+
+  sTrigger = () => {
+    this.setState({
+      bookDisplay: 'block',
+    });
+  }
+
+  hTrigger = () => {
+    this.setState({
+      bookDisplay: 'none',
     });
   }
 
@@ -277,10 +340,9 @@ itemClicked = (item) => {
     return (
       <div className={this.props.classes.container}>
       <Paper className={this.props.classes.paper} style={{display: this.state.popupDisplay}}>
-      <div class = "fadeInDown">
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
-          <div onClick={() => this.setState({ isSearching: false })}>
+          <div onClick={() => this.setState({ isSearching: false })} >
             <Search
               defaultTitle={this.state.title}
               search={this.searchMovie}
@@ -293,18 +355,33 @@ itemClicked = (item) => {
             <Button id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
           </div>
         </form>
-        </div>
+        </Paper>
+        
+        <Paper className={this.props.classes.paper} style={{display: this.state.bookDisplay}}>
+        <img className={this.props.classes.logo} src={logo1} alt="DodgeEm"/>
+        <form id="loginForm" onSubmit = {this.handleSubmit} >
+          <div onClick={() => this.setState({ isSearching: false })} >
+            <BookSearch
+              defaultTitle={this.state.title}
+              search={this.searchBook}
+              results={this.state.searchResults}
+              clicked={this.itemClicked}
+              searching={this.state.isSearching} />
+            <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
+            {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
+            <Button id="submitMovieclose" onClick={this.hTrigger} variant="contained" color="secondary" className={this.props.classes.button}>CANCEL</Button>
+            <Button id="submitMovie" onClick={this.handleBookSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
+          </div>
+        </form>
         </Paper>
       <div>
       <div className={this.props.classes.tabs}>
         {/*<div style={{ display: 'flex', backgroundColor: '#c2cad0', borderRadius: '5px', 'max-height':'800px', overflowY: 'scroll'}}>*/}
-        <div class = "fadeInDown">
         <Grid direction="row">
         <Grid item className={this.props.classes.item}>
           <VerticalTabs value={activeIndex} onChange={this.handleTabChange}>
-            <MyTab label='Movies' style={{fontWeight:'bold'}}/>
+            <MyTab label='Movies/TV Shows' style={{fontWeight:'bold'}}/>
             <MyTab label='Books' style={{fontWeight:'bold'}}/>
-            <MyTab label='Tv Shows' style={{fontWeight:'bold'}}/>
           </VerticalTabs>
           </Grid>
           <Grid item className={this.props.classes.item}>
@@ -314,23 +391,32 @@ itemClicked = (item) => {
           <TabContainer>
             <Grid container direction="row" className={this.props.classes.cardGrid}>
               <Grid item className={this.props.classes.item}>
-              <Button id="submitMovie" onClick={this.movieSearch} variant="contained" color="primary" className={this.props.classes.button}>Search Movie</Button>
+              <Button id="submitMovie" onClick={this.movieSearch} variant="contained" color="primary" className={this.props.classes.button}>Search Movie/TV Show</Button>
               </Grid>
               <Grid item className={this.props.classes.item}>
-                <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie Trigger</Button>
+                <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie/TV Show Trigger</Button>
               </Grid>
             </Grid>
-           
             <Grid container id="moviePage" direction="row" className={this.props.classes.cardGrid}>
             
             </Grid>
           </TabContainer>}
-          { activeIndex === 1 && <TabContainer>BOOKS HERE</TabContainer> }
-          { activeIndex === 2 && <TabContainer>TV SHOWS HERE</TabContainer> }
+          { activeIndex === 1 && <TabContainer>
+            <Grid container direction="row" className={this.props.classes.cardGrid}>
+              <Grid item className={this.props.classes.item}>
+              <Button id="submitBook" onClick={this.bookSearch} variant="contained" color="primary" className={this.props.classes.button}>Search Book</Button>
+              </Grid>
+              <Grid item className={this.props.classes.item}>
+                <Button id="submitBook" onClick={this.sTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Book Trigger</Button>
+              </Grid>
+            </Grid>
+            <Grid container id="bookPage" direction="row" className={this.props.classes.cardGrid}>
+            
+            </Grid>
+          </TabContainer>  }
         </div>
         </Grid>
         </Grid>
-        </div>
         <Dialog
           open={this.state.open}
           TransitionComponent={Transition}
@@ -340,7 +426,7 @@ itemClicked = (item) => {
           aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle id="alert-dialog-slide-title">
-            {"Successfully added a movie!"}
+            {"Successfully added the trigger!"}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
@@ -359,10 +445,10 @@ itemClicked = (item) => {
     );
   }
 }
-const Guests = compose(
+const Home = compose(
   withRouter,
   //withFirebase,
-)(Guest);
+)(HomeBase);
 const styles = theme => ({
   movieCard:{
     position: 'auto',
@@ -470,4 +556,4 @@ function TabContainer(props) {
   );
 }
 
-export default withStyles(styles)(Guests);
+export default withStyles(styles)(Home);
