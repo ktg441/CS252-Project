@@ -84,7 +84,7 @@ class ProfileBase extends React.Component {
 
     this.setState({about: amb.value});
     this.setState({triggers: that.state.multiTriggers});
-    //this.setState({multiTriggers: []});
+    this.setState({multiTriggers: []});
 
     if(this.state.mode === 'edit')
         this.setState({mode: 'view'});
