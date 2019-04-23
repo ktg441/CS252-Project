@@ -219,7 +219,7 @@ class HomeBase extends React.Component {
   } 
 
   componentDidMount() {
-    //this.getUserTrigs();
+    this.getUserTrigs();
     
     var that = this;
 

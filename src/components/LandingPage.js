@@ -89,7 +89,8 @@ class LandingPage extends React.Component {
             </Grid>
             </Section>
 
-            <Section heading="Who We Are" bg="#cdd2d8" color="black">
+            <Section bg="#cdd2d8" color="black">
+            <Typography><h1>Who We Are</h1></Typography>
             <hr color="black" width="20%"/>
             <Grid container direction="row" className={this.props.classes.cardGrid}>
               <Grid item className={this.props.classes.item}>
