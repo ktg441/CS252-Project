@@ -189,7 +189,9 @@ class ProfileBase extends React.Component {
       <div>
           <p>About Me: <TextField type='text' defaultValue={this.state.about} id='bio'></TextField></p>
           <br></br>
-          <Button id="deleteAcc" onClick={this.handleDelete} variant="contained" color="primary" className={this.props.classes.button}>Delete Account</Button>
+          <Button id="changepic" onClick={this.handlePicUpload} variant="contained" className={this.props.classes.button}>Change Picture</Button>
+          <p></p>
+          <Button id="deleteAcc" onClick={this.handleDelete} variant="contained" color="primary" className={this.props.classes.button}>Delete Account</Button>          
       </div>
     );
   }
@@ -236,6 +238,14 @@ class ProfileBase extends React.Component {
     }
   }
 
+  handlePicUpload(){
+
+  }
+
+  renderPic(){
+
+  }
+
   render() {
 
     const styleLink = document.createElement("link");
@@ -263,16 +273,17 @@ class ProfileBase extends React.Component {
                 </Paper>
                 <Paper className={this.props.classes.paperHalf}>
                     <h1>Favorite Media</h1>
-                    <div className={this.props.classes.mediabox}>
+                    <div className={this.props.classes.container}>
+                    <div className={this.props.classes.mediaboxLeft}>
                         <label className={this.props.classes.mediatype}>Movies</label>
                         <br></br>
                         {this.renderMovs()}
                     </div>
-                    <br></br>
-                    <div className={this.props.classes.mediabox}>
+                    <div className={this.props.classes.mediaboxRight}>
                         <label className={this.props.classes.mediatype}>Books</label>
                         <br></br>
                         {this.renderBooks()}
+                    </div>
                     </div>
                 </Paper>
             </div>
@@ -309,9 +320,15 @@ const styles = theme => ({
     position: 'relative',
     float: 'left',
   },
-  mediabox: {
-    'text-align': 'left',
-    height: '50%',
+  mediaboxLeft: {
+    'grid-column-start': 1,
+    'grid-column-end' : 2,
+    'text-align': 'center',
+  },
+  mediaboxRight: {
+    'grid-column-start':2,
+    'grid-column-end': 3,
+    'text-align': 'center',
   },
   mediatype: {
     'font-weight': 'bold',
