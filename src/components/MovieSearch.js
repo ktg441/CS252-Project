@@ -31,7 +31,6 @@ class MovieSearch extends React.Component{
       activeIndex: 0,
     };
     
-    this.searchBook = this.searchBook.bind(this);
 
   }
   
@@ -56,43 +55,22 @@ loadMovie() {
 }
 
 // we use a timeout to prevent the api request to fire immediately as we type
-timeout = null;
-searchBook = (event) => {
-  var that = this
-  this.setState({ title: event.target.value, isSearching: true })
-  var books = require('google-books-search');
 
-  books.search(this.state.title, function(error, results) {
-      if ( ! error ) {
-          console.log(results[1].title);
-          var bookTitle = [];
-          for(var i =0; i< 5; i ++){
-            bookTitle[i] = results[i].title
-          }
-          for(var i =0; i< 5; i ++){
-            console.log(bookTitle[i]);
-          }
-          
-          that.setState({ searchResults: bookTitle });
-          console.log(bookTitle.length)
-
-      } else {
-          console.log(error);
-      }
-  });
-}
 searchMovie = (event) => {
     this.setState({ title: event.target.value, isSearching: true })
-
+  var that = this;
     clearTimeout(this.timeout);
 
     this.timeout = setTimeout(() => {
         axios.get(`https://www.omdbapi.com/?apikey=7abe36ea&s=${this.state.title}`)
             .then(response => {
-
+                var movie = [];
                 if (response.data.Search) {
                     const movies = response.data.Search.slice(0, 5);
-                    this.setState({ searchResults: movies });
+                    for( var i =0; i< 5; i++){
+                      movie[i] = movies[i].Title
+                    }
+                    that.setState({ searchResults: movie });
                 }
             })
             .catch(error => {
@@ -107,9 +85,7 @@ searchMovie = (event) => {
 itemClicked = (item) => {
     this.setState(
         {
-            movieId: item.imdbID,
-            isSearching: false,
-            title: item.Title,
+            title: item
         }
     )
 }
