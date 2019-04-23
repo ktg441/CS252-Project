@@ -13,7 +13,7 @@ import logo2 from '../imgs/mov.png';
 import Search from './Search';
 import BookSearch from './BookSearch';
 
-import {Dropdown} from 'semantic-ui-react';
+import {Dropdown, Form} from 'semantic-ui-react';
 import firebase from 'firebase/app';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -37,6 +37,7 @@ class Guest extends React.Component {
     super(props);
     
     this.state = {
+      empty: '',
       triggers: [],
       movies: [],
       query: '',
@@ -246,10 +247,17 @@ itemClick = (item) => {
 
   handleMultiChange = (event, {value}) => {
     this.setState({ triggers: value });
+    console.log(value)
+    if(value.length ==0){
+      this.setState({ empty: '' });
+    }else{
+    this.setState({ empty: 'rice' });
+    }
   }
 
   handleSubmit = () => {
     //add the stuff to database
+    var that = this
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
     db.collection('Movies').doc(this.state.title).set({
@@ -410,6 +418,7 @@ handleBookTrigger = ()=>{
     styleLink.rel = "stylesheet";
     styleLink.href = "https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css";
     document.head.appendChild(styleLink);
+    const isInvalid =  this.state.empty === ''
 
     return (
       <div className={this.props.classes.container}>
@@ -427,7 +436,7 @@ handleBookTrigger = ()=>{
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
             {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
             <Button id="submitMovieclose" onClick={this.hideTrigger} variant="contained" color="secondary" className={this.props.classes.button}>CANCEL</Button>
-            <Button id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
+            <Button disabled={isInvalid} id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
           </div>
         </form>
         </Paper>
@@ -443,11 +452,12 @@ handleBookTrigger = ()=>{
               results={this.state.searchResults}
               clicked={this.itemClick}
               searching={this.state.isSearching} />
-          
+            
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
+           
             {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
             <Button id="submitMovieclose" onClick={this.hTrigger} variant="contained" color="secondary" className={this.props.classes.button}>CANCEL</Button>
-            <Button id="submitMovie" onClick={this.handleBookSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
+            <Button disabled={isInvalid} id="submitMovie" onClick={this.handleBookSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
           </div>
         </form>
         </Paper>
@@ -476,7 +486,7 @@ handleBookTrigger = ()=>{
             </Grid>
             <Grid>
               <div>
-              <Dropdown style={{width:"45%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
+              <Dropdown required style={{width:"45%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
               <Button id="submitTrigger" onClick={this.handleMovieTrigger} variant="contained" color="primary" className={this.props.classes.button}>Filter by Trigger</Button>
               </div>
               </Grid>
