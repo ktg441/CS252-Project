@@ -30,6 +30,8 @@ class ProfileBase extends React.Component {
       about: '',
       picURL: '',
       multiTriggers: [],
+      favMovs: [],
+      favBooks: [],
     };
     
     this.getUserInfo = this.getUserInfo.bind(this);    
@@ -57,8 +59,8 @@ class ProfileBase extends React.Component {
             that.setState({triggers: doc.data().Triggers});
             that.setState({about: doc.data().AboutMe});
             that.setState({picURL: doc.data().PicURL});
-            //console.log("Email: ", that.state.doc.data().Email);
-        }
+            that.setState({favMovs: doc.data().FavMovies});
+            that.setState({favBooks: doc.data().FavBooks});        }
         else {
             console.log("No info found!");
         }
@@ -191,6 +193,48 @@ class ProfileBase extends React.Component {
     );
   }
 
+  renderMovs(){
+    var that = this;
+    var movies = that.state.favMovs;
+    if(movies === undefined || movies.length === 0){
+        return(
+            <p>You have no favorite movies!</p>
+        );
+    }
+    else{
+        return (
+            <div>
+                {movies.map(function (n) {
+                    return ([
+                        <p key = {n}>{n}</p>
+                    ])
+                })}
+            </div>
+        );
+    }
+  }
+
+  renderBooks(){
+    var that = this;
+    var books = that.state.favBooks;
+    if(books === undefined || books.length === 0){
+        return(
+            <p>You have no favorite books!</p>
+        );
+    }
+    else{
+        return (
+            <div>
+                {books.map(function (n) {
+                    return ([
+                        <p key = {n}>{n}</p>
+                    ])
+                })}
+            </div>
+        );
+    }
+  }
+
   render() {
 
     const styleLink = document.createElement("link");
@@ -213,25 +257,21 @@ class ProfileBase extends React.Component {
                     </div>
                 </Paper>
                 <Paper className={this.props.classes.paperQuarterBottom}>
-                    <h2>Trigger List</h2>
+                    <h1>Trigger List</h1>
                     {this.populateTriggers()}
                 </Paper>
                 <Paper className={this.props.classes.paperHalf}>
-                    <h2>Favorite Media</h2>
+                    <h1>Favorite Media</h1>
                     <div className={this.props.classes.mediabox}>
                         <label className={this.props.classes.mediatype}>Movies</label>
                         <br></br>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
+                        {this.renderMovs()}
                     </div>
+                    <br></br>
                     <div className={this.props.classes.mediabox}>
                         <label className={this.props.classes.mediatype}>Books</label>
                         <br></br>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
-                    </div>
-                    <div className={this.props.classes.mediabox}>
-                        <label className={this.props.classes.mediatype}>TV Shows</label>
-                        <br></br>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will..</p>
+                        {this.renderBooks()}
                     </div>
                 </Paper>
             </div>
@@ -270,6 +310,7 @@ const styles = theme => ({
   },
   mediabox: {
     'text-align': 'left',
+    height: '50%',
   },
   mediatype: {
     'font-weight': 'bold',
