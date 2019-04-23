@@ -419,6 +419,8 @@ handleBookTrigger = ()=>{
     styleLink.href = "https://cdn.jsdelivr.net/npm/semantic-ui/dist/semantic.min.css";
     document.head.appendChild(styleLink);
     const isInvalid =  this.state.empty === ''
+    const isInval =  this.state.title === ''
+
 
     return (
       <div className={this.props.classes.container}>
@@ -426,7 +428,9 @@ handleBookTrigger = ()=>{
         <img className={this.props.classes.logo} src={logo} alt="DodgeEm"/>
         <form id="loginForm" onSubmit = {this.handleSubmit} >
           <div onClick={() => this.setState({ isSearching: false })} >
+
           <Search
+                    //required
                     defaultTitle={this.state.title}
                     search={this.searchMovie}
                     results={this.state.searchResults}
@@ -436,7 +440,7 @@ handleBookTrigger = ()=>{
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
             {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
             <Button id="submitMovieclose" onClick={this.hideTrigger} variant="contained" color="secondary" className={this.props.classes.button}>CANCEL</Button>
-            <Button disabled={isInvalid} id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
+            <Button disabled={isInvalid} disabled={isInval} id="submitMovie" onClick={this.handleSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
           </div>
         </form>
         </Paper>
@@ -457,7 +461,7 @@ handleBookTrigger = ()=>{
            
             {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
             <Button id="submitMovieclose" onClick={this.hTrigger} variant="contained" color="secondary" className={this.props.classes.button}>CANCEL</Button>
-            <Button disabled={isInvalid} id="submitMovie" onClick={this.handleBookSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
+            <Button disabled={isInvalid} disabled={isInval} id="submitMovie" onClick={this.handleBookSubmit} variant="contained" color="primary"  className={this.props.classes.button}>ENTER</Button>
           </div>
         </form>
         </Paper>
