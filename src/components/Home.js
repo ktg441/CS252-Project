@@ -54,6 +54,7 @@ class HomeBase extends React.Component {
       timeCreated: '',
       dbBooks: '',
       favMovies: [],
+      favBooks: [],
       lastChange: '',
       movPage: [],
     };
@@ -105,7 +106,7 @@ class HomeBase extends React.Component {
     return false;
   }
 
-  handleStarChange(name, status){
+  handleStarMovieChange(name, status){
     var title = name;
     var that = this;
     var movies = [];
@@ -140,6 +141,41 @@ class HomeBase extends React.Component {
     });
   }
 
+  handleStarBookChange(name, status){
+    var title = name;
+    var that = this;
+    var movies = [];
+    var user = firebase.auth().currentUser;
+    let db = firebase.firestore();
+    db.collection('users').doc(user.uid).get().then(function(doc) {
+        if(doc.exists){
+            movies = doc.data().FavBooks;
+            var toUpdate = [];
+            if(status == 1){
+                for(var i=0; i<movies.length; i++){
+                    if(movies[i] === name) continue;
+                    toUpdate.push(movies[i]);
+                }
+            }
+            else{
+                console.log("hollow star");
+                movies.push(title);
+                toUpdate = movies;
+            }
+            db.collection('users').doc(user.uid).update({      
+                FavBooks: toUpdate
+            })
+        }
+        that.setState({lastChange: name});
+        const sleep = (milliseconds) => {
+            return new Promise(resolve => setTimeout(resolve, milliseconds));
+        }
+        sleep(500).then(()=> {
+            that.handleClose();
+        })
+    });
+  }
+
   renderMovStars(name){
     var that = this;
 
@@ -149,14 +185,35 @@ class HomeBase extends React.Component {
         if(that.state.favMovies[i] === title){
             return(
                 <div className = {this.props.classes.favLine}>
-                    <font id="star" color='gold' onClick={that.handleStarChange.bind(this,name,1)} size="5" >★</font>
+                    <font id="star" color='gold' onClick={that.handleStarMovieChange.bind(this,name,1)} size="5" >★</font>
                 </div>
             )
         }
     }
     return(
         <div className = {that.props.classes.favLine}>
-            <font id="hollowstar" onClick={that.handleStarChange.bind(this,name,0)} size="5" >☆</font>
+            <font id="hollowstar" onClick={that.handleStarMovieChange.bind(this,name,0)} size="5" >☆</font>
+        </div>
+    )
+  } 
+
+  renderBookStars(name){
+    var that = this;
+
+    var title = name;
+    var isFav = false;
+    for(var i = 0; i<that.state.favBooks.length; i++){
+        if(that.state.favBooks[i] === title){
+            return(
+                <div className = {this.props.classes.favLine}>
+                    <font id="star" color='gold' onClick={that.handleStarBookChange.bind(this,name,1)} size="5" >★</font>
+                </div>
+            )
+        }
+    }
+    return(
+        <div className = {that.props.classes.favLine}>
+            <font id="hollowstar" onClick={that.handleStarBookChange.bind(this,name,0)} size="5" >☆</font>
         </div>
     )
   } 
@@ -234,7 +291,17 @@ class HomeBase extends React.Component {
   }
 
   getBooks = () => {
+
+    var user = firebase.auth().currentUser;
+    let db = firebase.firestore();
     var that = this;
+    var favBooks = [""];
+    db.collection('users').doc(user.uid).get().then(function(doc){
+        if(doc.exists){
+            that.setState({favBooks: doc.data().FavBooks})
+        }
+    });
+
     this.collectBooks().then(function(value){
       that.setState({dbBooks: value});
       var book = [];
@@ -246,6 +313,7 @@ class HomeBase extends React.Component {
             <div className={that.props.classes.movieCard} >
             <div class="fadeIn">
               <Paper className={that.props.classes.paper} >
+                {that.renderBookStars(value[i].Name)}
                 <Typography><h1>{value[i].Name}</h1></Typography>
                 <hr color="black" width="10%"/>
                 <Typography><h3>Triggers:</h3></Typography>

@@ -60,7 +60,7 @@ class ProfileBase extends React.Component {
             that.setState({about: doc.data().AboutMe});
             that.setState({picURL: doc.data().PicURL});
             that.setState({favMovs: doc.data().FavMovies});
-            that.setState({favBooks: doc.data().favBooks});        }
+            that.setState({favBooks: doc.data().FavBooks});        }
         else {
             console.log("No info found!");
         }
