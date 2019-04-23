@@ -394,9 +394,7 @@ itemClick = (item) => {
   handleSubmit = () => {
     //add the stuff to database
     var user = firebase.auth().currentUser;
-    let db = firebase.firestore();
-    console.log(this.triggers.length)
-    
+    let db = firebase.firestore();    
     db.collection('Movies').doc(this.state.title).set({
       Triggers: this.state.triggers,
       Name: this.state.title,
