@@ -57,6 +57,7 @@ class ProfileBase extends React.Component {
             that.setState({email: doc.data().Email});
             that.setState({name: doc.data().Username});
             that.setState({triggers: doc.data().Triggers});
+            that.setState({multiTriggers: doc.data().Triggers});
             that.setState({about: doc.data().AboutMe});
             that.setState({picURL: doc.data().PicURL});
             that.setState({favMovs: doc.data().FavMovies});
