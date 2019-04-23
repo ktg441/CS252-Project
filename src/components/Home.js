@@ -220,7 +220,7 @@ class HomeBase extends React.Component {
   } 
 
   componentDidMount() {
-    //this.getUserTrigs();
+    this.getUserTrigs();
     
     var that = this;
 
@@ -394,9 +394,7 @@ itemClick = (item) => {
   handleSubmit = () => {
     //add the stuff to database
     var user = firebase.auth().currentUser;
-    let db = firebase.firestore();
-    console.log(this.triggers.length)
-    if(this.triggers.length > 0){
+    let db = firebase.firestore();    
     db.collection('Movies').doc(this.state.title).set({
       Triggers: this.state.triggers,
       Name: this.state.title,
@@ -406,9 +404,6 @@ itemClick = (item) => {
     }).catch({
 
     })
-  }else{
-    console.log("loser")
-  }
   }
   handleBookSubmit = () => {
     //add the stuff to database
