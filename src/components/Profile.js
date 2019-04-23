@@ -10,7 +10,7 @@ import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField/';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-
+import ReactDOM from 'react-dom';
 //import logo from '../imgs/add.png';
 import profilepic from '../imgs/Fav.png';
 import { auth } from './FirebaseConfig/Fire';
@@ -205,8 +205,9 @@ class ProfileBase extends React.Component {
           <br></br>
           <div id="filesubmit">
             <input type="file" onChange={this.handleFileUpload} accept="image/*"/>
-            <Button id="changepic" variant = "contained" onClick={this.handlePicUpload} className={this.props.classes.button}>Change Picture</Button>
+            <Button id="changepic" variant = "contained" onClick={this.handlePicUpload} className={this.props.classes.button}>Upload Picture</Button>
           </div>
+          <div id='infostuff'></div>
           <p></p>
           <Button id="deleteAcc" onClick={this.handleDelete} variant="contained" color="primary" className={this.props.classes.button}>Delete Account</Button>          
       </div>
@@ -273,11 +274,16 @@ class ProfileBase extends React.Component {
                 console.log(url);
                 that.setState({currPicURL: url});
                 that.setState({willReload: 1});
-            }).success(function(){
-                
+                const sleep = (milliseconds) => {
+                    return new Promise(resolve => setTimeout(resolve, milliseconds));
+                }
+                sleep(2000);
+                var inHTML = 'Upload Complete!';
+                ReactDOM.render( inHTML, document.getElementById('infostuff'));
             })
             
         });
+        
   }
 
   handleFileUpload = (e) => {
