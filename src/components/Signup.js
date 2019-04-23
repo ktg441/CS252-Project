@@ -233,8 +233,8 @@ class SignupBase extends React.Component {
               id="username"
               type="username"
               required
-              value={this.state.username}
-              onChange={this.handleChange}
+              defaultValue={this.state.username}
+              onBlur={this.handleChange.bind(this)}
               label="Name"
               fullWidth
               className={this.props.classes.field}
@@ -245,8 +245,8 @@ class SignupBase extends React.Component {
               id="email"
               type="email"
               required
-              value={this.state.email}
-              onChange={this.handleChange}
+              defaultValue={this.state.email}
+              onBlur={this.handleChange}
               label="Email"
               fullWidth
               className={this.props.classes.field}
@@ -270,15 +270,15 @@ class SignupBase extends React.Component {
               id="password2"
               type="password"
               required
-              value={this.state.password2}
-              onChange={this.handleChange}
+              defaultValue={this.state.password2}
+              onBlur={this.handleChange}
               label="Confirm Password"
               fullWidth
               className={this.props.classes.field}
               variant="outlined"
             />
             <Dropdown id="quest1" style={{width:"75%", margin: 'auto'}} placeholder='Security Question' fluid selection options={secQuests} onChange={this.handleSingle1Change}/>
-            <TextField id="ans1" type="ans1" required value={this.state.ans1} onChange={this.handleChange} label="Answer" fullWidth className={this.props.classes.field} variant="outlined"/>
+            <TextField id="ans1" type="ans1" required defaultValue={this.state.ans1} onBlur={this.handleChange} label="Answer" fullWidth className={this.props.classes.field} variant="outlined"/>
            
             <Dropdown style={{width:"75%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
           </form>
