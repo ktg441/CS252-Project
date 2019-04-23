@@ -161,7 +161,8 @@ itemClicked = (item) => {
       const { movies, query } = this.state;
       const isSearched = query => item => !query || item.title.toLowerCase().includes(query.toLowerCase());
       const { activeIndex } = this.state;
-  
+      const isInval =  this.state.title === ''
+
         return (
           <div className={this.props.classes.container}>
             <Paper className={this.props.classes.paper}>
@@ -177,7 +178,7 @@ itemClicked = (item) => {
             
                 {<Typography className={this.props.classes.error}>{this.state.error}</Typography>}
                 <Button id="loginBtn" onClick={this.goBack} variant="contained" color="secondary" form="loginForm" className={this.props.classes.button}>GO BACK</Button>
-                <Button id="loginBtn" onClick={this.handleSubmit} variant="contained" color="primary" form="loginForm" className={this.props.classes.button}>SEARCH</Button>
+                <Button id="loginBtn" disabled={isInval} onClick={this.handleSubmit} variant="contained" color="primary" form="loginForm" className={this.props.classes.button}>SEARCH</Button>
               </form>
             </Paper>
             <div id="bookTrigs">
