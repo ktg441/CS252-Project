@@ -196,7 +196,7 @@ class ProfileBase extends React.Component {
   renderMovs(){
     var that = this;
     var movies = that.state.favMovs;
-    if(movies === undefined){
+    if(movies === undefined || movies.length === 0){
         return(
             <p>You have no favorite movies!</p>
         );
@@ -217,7 +217,7 @@ class ProfileBase extends React.Component {
   renderBooks(){
     var that = this;
     var books = that.state.favBooks;
-    if(books === undefined){
+    if(books === undefined || books.length === 0){
         return(
             <p>You have no favorite books!</p>
         );

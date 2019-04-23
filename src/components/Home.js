@@ -55,6 +55,7 @@ class HomeBase extends React.Component {
       dbBooks: '',
       favMovies: [],
       lastChange: '',
+      movPage: [],
     };
     
   }
@@ -130,7 +131,12 @@ class HomeBase extends React.Component {
             })
         }
         that.setState({lastChange: name});
-        //that.forceUpdate();
+        const sleep = (milliseconds) => {
+            return new Promise(resolve => setTimeout(resolve, milliseconds));
+        }
+        sleep(500).then(()=> {
+            that.handleClose();
+        })
     });
   }
 
@@ -177,7 +183,7 @@ class HomeBase extends React.Component {
       for(var i = 0; i < value.length; i++){
         if(that.compTrigs(value[i].Triggers) === false){
           const element = (
-          <Grid item  className={that.props.classes.item} >
+          <Grid item className={that.props.classes.item} key={i} >
             <div className={that.props.classes.movieCard} >
             <div className="fadeIn">
               <Paper className={that.props.classes.paper} >
@@ -191,10 +197,10 @@ class HomeBase extends React.Component {
             </div>
           </Grid>
         );
-          
           movs.push(element);
         }
       }
+       that.setState({movPage: movs});
        ReactDOM.render(movs, document.getElementById('moviePage'));
     });   
   }
