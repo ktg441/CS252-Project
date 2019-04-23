@@ -10,6 +10,7 @@ import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField/';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import ReactDOM from 'react-dom';
 //import logo from '../imgs/add.png';
 import profilepic from '../imgs/Fav.png';
 import { auth } from './FirebaseConfig/Fire';
@@ -32,6 +33,9 @@ class ProfileBase extends React.Component {
       multiTriggers: [],
       favMovs: [],
       favBooks: [],
+      currFile: '',
+      currPicURL: '',
+      willReload: 0,
     };
     
     this.getUserInfo = this.getUserInfo.bind(this);    
@@ -57,6 +61,7 @@ class ProfileBase extends React.Component {
             that.setState({email: doc.data().Email});
             that.setState({name: doc.data().Username});
             that.setState({triggers: doc.data().Triggers});
+            that.setState({multiTriggers: doc.data().Triggers});
             that.setState({about: doc.data().AboutMe});
             that.setState({picURL: doc.data().PicURL});
             that.setState({favMovs: doc.data().FavMovies});
@@ -79,9 +84,14 @@ class ProfileBase extends React.Component {
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
     var that = this;
+    //var willReload = false;
+    if(that.state.currPicURL === ''){
+        that.state.currPicURL = that.state.picURL;
+    }
     db.collection('users').doc(user.uid).update({
         AboutMe: amb.value,
         Triggers: that.state.multiTriggers,
+        PicURL: that.state.currPicURL,
     })
 
     this.setState({about: amb.value});
@@ -92,6 +102,11 @@ class ProfileBase extends React.Component {
         this.setState({mode: 'view'});
     else
         this.setState({mode: 'edit'});
+
+    if(this.state.willReload === 1){
+        this.setState({willReload: 0});
+        window.location.reload();
+    }
 
   }
 
@@ -107,7 +122,7 @@ class ProfileBase extends React.Component {
     var that = this;
     if (that.state.mode === 'edit') 
       return (
-        <div className={this.props.classes.buttonLine}>
+        <div id='confirmedit' className={this.props.classes.buttonLine}>
             <font id="saveBtn" color='green' size="5" onClick={that.changeCheckMode}>✔</font>
             &nbsp;&nbsp;&nbsp;
             <font id="discardBtn" color='red' size="5" onClick={that.changeXMode}>✘</font>
@@ -188,7 +203,13 @@ class ProfileBase extends React.Component {
       <div>
           <p>About Me: <TextField type='text' defaultValue={this.state.about} id='bio'></TextField></p>
           <br></br>
-          <Button id="deleteAcc" onClick={this.handleDelete} variant="contained" color="primary" className={this.props.classes.button}>Delete Account</Button>
+          <div id="filesubmit">
+            <input type="file" onChange={this.handleFileUpload} accept="image/*"/>
+            <Button id="changepic" variant = "contained" onClick={this.handlePicUpload} className={this.props.classes.button}>Upload Picture</Button>
+          </div>
+          <div id='infostuff'></div>
+          <p></p>
+          <Button id="deleteAcc" onClick={this.handleDelete} variant="contained" color="primary" className={this.props.classes.button}>Delete Account</Button>          
       </div>
     );
   }
@@ -235,6 +256,42 @@ class ProfileBase extends React.Component {
     }
   }
 
+  handlePicUpload = (e) => {
+        //var that = this;
+        var storageRef = firebase.storage().ref();
+        var selectedFile = this.state.currFile;
+        const uploadTask = storageRef.child(`images/${selectedFile.name}`).put(selectedFile); //create a child directory called images, and place the file inside this directory
+        uploadTask.on('state_changed', (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        }, (error) => {
+        // Handle unsuccessful uploads
+        console.log(error);
+        }, () => {
+            // Do something once upload is complete
+            var URL = "";
+            var that = this;
+            storageRef.child(`images/${selectedFile.name}`).getDownloadURL().then(function(url){
+                console.log(url);
+                that.setState({currPicURL: url});
+                that.setState({willReload: 1});
+                const sleep = (milliseconds) => {
+                    return new Promise(resolve => setTimeout(resolve, milliseconds));
+                }
+                sleep(2000);
+                var inHTML = 'Upload Complete!';
+                ReactDOM.render( inHTML, document.getElementById('infostuff'));
+            })
+            
+        });
+        
+  }
+
+  handleFileUpload = (e) => {
+    var selectedFile = e.target.files[0];
+    //var that = this;
+    this.setState({currFile: selectedFile});
+  }
+
   render() {
 
     const styleLink = document.createElement("link");
@@ -262,16 +319,17 @@ class ProfileBase extends React.Component {
                 </Paper>
                 <Paper className={this.props.classes.paperHalf}>
                     <h1>Favorite Media</h1>
-                    <div className={this.props.classes.mediabox}>
-                        <label className={this.props.classes.mediatype}>Movies</label>
+                    <div className={this.props.classes.container}>
+                    <div className={this.props.classes.mediaboxLeft}>
+                        <label className={this.props.classes.mediatype}>Movies/TV Shows</label>
                         <br></br>
                         {this.renderMovs()}
                     </div>
-                    <br></br>
-                    <div className={this.props.classes.mediabox}>
+                    <div className={this.props.classes.mediaboxRight}>
                         <label className={this.props.classes.mediatype}>Books</label>
                         <br></br>
                         {this.renderBooks()}
+                    </div>
                     </div>
                 </Paper>
             </div>
@@ -308,9 +366,15 @@ const styles = theme => ({
     position: 'relative',
     float: 'left',
   },
-  mediabox: {
-    'text-align': 'left',
-    height: '50%',
+  mediaboxLeft: {
+    'grid-column-start': 1,
+    'grid-column-end' : 2,
+    'text-align': 'center',
+  },
+  mediaboxRight: {
+    'grid-column-start':2,
+    'grid-column-end': 3,
+    'text-align': 'center',
   },
   mediatype: {
     'font-weight': 'bold',
