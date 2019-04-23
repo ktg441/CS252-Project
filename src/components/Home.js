@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { compose } from 'recompose';
 //import { withFirebase } from './Firebase';
@@ -53,6 +53,10 @@ class HomeBase extends React.Component {
       userTrigs: [],
       timeCreated: '',
       dbBooks: '',
+      favMovies: [],
+      favBooks: [],
+      lastChange: '',
+      movPage: [],
     };
     
   }
@@ -102,10 +106,133 @@ class HomeBase extends React.Component {
     return false;
   }
 
+  handleStarMovieChange(name, status){
+    var title = name;
+    var that = this;
+    var movies = [];
+    var user = firebase.auth().currentUser;
+    let db = firebase.firestore();
+    db.collection('users').doc(user.uid).get().then(function(doc) {
+        if(doc.exists){
+            movies = doc.data().FavMovies;
+            var toUpdate = [];
+            if(status == 1){
+                for(var i=0; i<movies.length; i++){
+                    if(movies[i] === name) continue;
+                    toUpdate.push(movies[i]);
+                }
+            }
+            else{
+                console.log("hollow star");
+                movies.push(title);
+                toUpdate = movies;
+            }
+            db.collection('users').doc(user.uid).update({      
+                FavMovies: toUpdate
+            })
+        }
+        that.setState({lastChange: name});
+        const sleep = (milliseconds) => {
+            return new Promise(resolve => setTimeout(resolve, milliseconds));
+        }
+        sleep(500).then(()=> {
+            that.handleClose();
+        })
+    });
+  }
+
+  handleStarBookChange(name, status){
+    var title = name;
+    var that = this;
+    var movies = [];
+    var user = firebase.auth().currentUser;
+    let db = firebase.firestore();
+    db.collection('users').doc(user.uid).get().then(function(doc) {
+        if(doc.exists){
+            movies = doc.data().FavBooks;
+            var toUpdate = [];
+            if(status == 1){
+                for(var i=0; i<movies.length; i++){
+                    if(movies[i] === name) continue;
+                    toUpdate.push(movies[i]);
+                }
+            }
+            else{
+                console.log("hollow star");
+                movies.push(title);
+                toUpdate = movies;
+            }
+            db.collection('users').doc(user.uid).update({      
+                FavBooks: toUpdate
+            })
+        }
+        that.setState({lastChange: name});
+        const sleep = (milliseconds) => {
+            return new Promise(resolve => setTimeout(resolve, milliseconds));
+        }
+        sleep(500).then(()=> {
+            that.handleClose();
+        })
+    });
+  }
+
+  renderMovStars(name){
+    var that = this;
+
+    var title = name;
+    var isFav = false;
+    for(var i = 0; i<that.state.favMovies.length; i++){
+        if(that.state.favMovies[i] === title){
+            return(
+                <div className = {this.props.classes.favLine}>
+                    <font id="star" color='gold' onClick={that.handleStarMovieChange.bind(this,name,1)} size="5" >★</font>
+                </div>
+            )
+        }
+    }
+    return(
+        <div className = {that.props.classes.favLine}>
+            <font id="hollowstar" onClick={that.handleStarMovieChange.bind(this,name,0)} size="5" >☆</font>
+        </div>
+    )
+  } 
+
+  renderBookStars(name){
+    var that = this;
+
+    var title = name;
+    var isFav = false;
+    for(var i = 0; i<that.state.favBooks.length; i++){
+        if(that.state.favBooks[i] === title){
+            return(
+                <div className = {this.props.classes.favLine}>
+                    <font id="star" color='gold' onClick={that.handleStarBookChange.bind(this,name,1)} size="5" >★</font>
+                </div>
+            )
+        }
+    }
+    return(
+        <div className = {that.props.classes.favLine}>
+            <font id="hollowstar" onClick={that.handleStarBookChange.bind(this,name,0)} size="5" >☆</font>
+        </div>
+    )
+  } 
+
   componentDidMount() {
     this.getUserTrigs();
     
     var that = this;
+
+    var user = firebase.auth().currentUser;
+    let db = firebase.firestore();
+    var that = this;
+    var favMovs = [""];
+    db.collection('users').doc(user.uid).get().then(function(doc){
+        if(doc.exists){
+            that.setState({favMovies: doc.data().FavMovies})
+        }
+    });
+
     this.collectMovies().then(function(value){
       that.setState({dbMovies: value});
       var movs = [];
@@ -113,10 +240,11 @@ class HomeBase extends React.Component {
       for(var i = 0; i < value.length; i++){
         if(that.compTrigs(value[i].Triggers) === false){
           const element = (
-          <Grid item  className={that.props.classes.item} >
+          <Grid item className={that.props.classes.item} key={i} >
             <div className={that.props.classes.movieCard} >
-            <div class="fadeIn">
+            <div className="fadeIn">
               <Paper className={that.props.classes.paper} >
+                {that.renderMovStars(value[i].Name)}
                 <Typography><h1>{value[i].Name}</h1></Typography>
                 <hr color="black" width="10%"/>
                 <Typography><h3>Triggers:</h3></Typography>
@@ -126,10 +254,10 @@ class HomeBase extends React.Component {
             </div>
           </Grid>
         );
-          
           movs.push(element);
         }
       }
+       that.setState({movPage: movs});
        ReactDOM.render(movs, document.getElementById('moviePage'));
     });   
   }
@@ -163,7 +291,17 @@ class HomeBase extends React.Component {
   }
 
   getBooks = () => {
+
+    var user = firebase.auth().currentUser;
+    let db = firebase.firestore();
     var that = this;
+    var favBooks = [""];
+    db.collection('users').doc(user.uid).get().then(function(doc){
+        if(doc.exists){
+            that.setState({favBooks: doc.data().FavBooks})
+        }
+    });
+
     this.collectBooks().then(function(value){
       that.setState({dbBooks: value});
       var book = [];
@@ -175,6 +313,7 @@ class HomeBase extends React.Component {
             <div className={that.props.classes.movieCard} >
             <div class="fadeIn">
               <Paper className={that.props.classes.paper} >
+                {that.renderBookStars(value[i].Name)}
                 <Typography><h1>{value[i].Name}</h1></Typography>
                 <hr color="black" width="10%"/>
                 <Typography><h3>Triggers:</h3></Typography>
@@ -484,6 +623,13 @@ const styles = theme => ({
   error: {
     color: "red",
     marginTop: 10
+  },
+  favLine: {
+    marginRight: '3%',
+    marginTop: '1%',
+    display: 'flex',
+    'justify-content': 'flex-end', 
+    cursor: 'pointer',
   },
   resetButton: {
     onClick: 'true',
