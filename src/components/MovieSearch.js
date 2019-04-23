@@ -108,12 +108,18 @@ itemClicked = (item) => {
           that.setState({trigger: doc.data().Triggers});
           console.log("Triggers: ", doc.data().Triggers);
 
-        const moviePage = (<Paper className={that.props.classes.paper}>
+        const moviePage = (
+          <div>
+          <Paper className={that.props.classes.paper}>
           <Typography><h1>{that.state.title}</h1></Typography>
           <hr color="black" width="10%"/>
           <Typography><h3>Triggers:</h3></Typography>
           <Typography><h4>{that.state.trigger}</h4></Typography>
-          </Paper>);
+          </Paper>
+          <br></br>
+          <br></br>
+          </div>
+        );
           ReactDOM.render(moviePage, document.getElementById('movieTrigs'));
       }
       else {
@@ -143,7 +149,8 @@ itemClicked = (item) => {
     });
   }
   goBack = () =>{
-    this.props.history.push('/home');
+    //this.props.history.push('/home');
+    this.props.history.goBack() 
   }    
     render() {
       const { movies, query } = this.state;

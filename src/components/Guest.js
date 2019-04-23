@@ -54,7 +54,8 @@ class Guest extends React.Component {
       timeCreated: '',
       dbBooks: '',
     };
-    
+    this.collectMovies = this.collectMovies.bind(this);    
+
   }
   
   movieSearch = () => {
@@ -91,7 +92,7 @@ class Guest extends React.Component {
   }
 
   compTrigs = (arr) => {
-    var trigs = this.state.userTrigs;
+    var trigs = this.state.triggers;
     for(var i = 0; i < trigs.length; i++){
       for(var j = 0; j < arr.length; j++){
         if(trigs[i] === arr[j]){
@@ -104,12 +105,13 @@ class Guest extends React.Component {
 
   componentDidMount() {
     //this.getUserTrigs();
-    
+    console.log(this)
     var that = this;
+    console.log(that)
     this.collectMovies().then(function(value){
       that.setState({dbMovies: value});
       var movs = [];
-      
+      console.log(this)
       for(var i = 0; i < value.length; i++){
         if(that.compTrigs(value[i].Triggers) === false){
           const element = (
@@ -135,6 +137,7 @@ class Guest extends React.Component {
   }
 
   getUserTrigs = () => {
+    /*
     var user = firebase.auth().currentUser;
     let db = firebase.firestore();
     var that = this;
@@ -149,7 +152,8 @@ class Guest extends React.Component {
         }
     }).catch(function(error) {
         console.log("Error getting information:", error);
-    });
+    });*/
+
   }
 
   async collectMovies() {
@@ -164,14 +168,14 @@ class Guest extends React.Component {
 
   getBooks = () => {
     var that = this;
-    this.collectBooks().then(function(value){
+    that.collectBooks().then(function(value){
       that.setState({dbBooks: value});
       var book = [];
       
       for(var i = 0; i < value.length; i++){
         if(that.compTrigs(value[i].Triggers) === false){
           const element = (
-          <Grid item  className={that.props.classes.item} >
+          <Grid item className={that.props.classes.item} >
             <div className={that.props.classes.movieCard} >
             <div class="fadeIn">
               <Paper className={that.props.classes.paper} >
@@ -259,8 +263,6 @@ itemClick = (item) => {
     })
   }
   handleBookSubmit = () => {
-    //add the stuff to database
-    var user = firebase.auth().currentUser;
     let db = firebase.firestore();
     db.collection('Books').doc(this.state.title).set({
       Triggers: this.state.triggers,
@@ -277,6 +279,68 @@ itemClick = (item) => {
     this.setState({ open: false });
     window.location.reload();
   };
+handleBookTrigger = ()=>{
+  var that = this;
+  that.collectBooks().then(function(value){
+    that.setState({dbBooks: value});
+    var book = [];
+    
+    for(var i = 0; i < value.length; i++){
+      if(that.compTrigs(value[i].Triggers) === false){
+        const element = (
+        <Grid item className={that.props.classes.item} >
+          <div className={that.props.classes.movieCard} >
+          <div class="fadeIn">
+            <Paper className={that.props.classes.paper} >
+              <Typography><h1>{value[i].Name}</h1></Typography>
+              <hr color="black" width="10%"/>
+              <Typography><h3>Triggers:</h3></Typography>
+              <Typography><h4>{value[i].Triggers}</h4></Typography>
+            </Paper>
+            </div>
+          </div>
+        </Grid>
+      );
+        
+        book.push(element);
+      }
+    }
+    ReactDOM.render(book, document.getElementById('bookPage'));
+  });
+}
+  handleMovieTrigger = () =>{
+    //this.setState({ open: false });
+    console.log(this)
+    var that = this;
+    console.log(that)
+    this.collectMovies().then(function(value){
+      that.setState({dbMovies: value});
+      var movs = [];
+      console.log(this)
+      for(var i = 0; i < value.length; i++){
+        if(that.compTrigs(value[i].Triggers) === false){
+          const element = (
+          <Grid item  className={that.props.classes.item} >
+            <div className={that.props.classes.movieCard} >
+            <div class="fadeIn">
+              <Paper className={that.props.classes.paper} >
+                <Typography><h1>{value[i].Name}</h1></Typography>
+                <hr color="black" width="10%"/>
+                <Typography><h3>Triggers:</h3></Typography>
+                <Typography><h4>{value[i].Triggers}</h4></Typography>
+              </Paper>
+              </div>
+            </div>
+          </Grid>
+        );
+          
+          movs.push(element);
+        }
+      }
+       ReactDOM.render(movs, document.getElementById('moviePage'));
+    });   
+    //window.location.reload();
+  }
 
   handleClickOpen = () => {
     this.setState({ open: true });
@@ -410,6 +474,12 @@ itemClick = (item) => {
                 <Button id="submitMovie" onClick={this.showTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Movie/TV Show Trigger</Button>
               </Grid>
             </Grid>
+            <Grid>
+              <div>
+              <Dropdown style={{width:"45%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
+              <Button id="submitTrigger" onClick={this.handleMovieTrigger} variant="contained" color="primary" className={this.props.classes.button}>Filter by Trigger</Button>
+              </div>
+              </Grid>
             <Grid container id="moviePage" direction="row" className={this.props.classes.cardGrid}>
             
             </Grid>
@@ -423,6 +493,12 @@ itemClick = (item) => {
                 <Button id="submitBook" onClick={this.sTrigger} variant="contained" color="primary" className={this.props.classes.button}>Add Book Trigger</Button>
               </Grid>
             </Grid>
+            <Grid>
+              <div>
+              <Dropdown style={{width:"45%", margin: 'auto'}} placeholder="Triggers" fluid multiple selection options={options} onChange={this.handleMultiChange}/>
+              <Button id="submitTrigger" onClick={this.handleBookTrigger} variant="contained" color="primary" className={this.props.classes.button}>Filter by Trigger</Button>
+              </div>
+              </Grid>
             <Grid container id="bookPage" direction="row" className={this.props.classes.cardGrid}>
             
             </Grid>
